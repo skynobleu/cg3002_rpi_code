@@ -15,7 +15,7 @@ from sklearn.ensemble import GradientBoostingClassifier
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.linear_model import LinearRegression
-
+from sklearn.metrics import mean_squared_error, r2_score
 
 
 class Software:
@@ -114,10 +114,10 @@ class Software:
         print("Test set score: {:.6f}".format(knn.score(X_test, y_test)))
         
         print("Train set score: {:.6f}".format(knn.score(X_train, y_train)))
-        self.benchmark(start, end)
+        self.benchmark(start, end, "### KNN Prediction Time ###")
         
         
-        print("*** Classifier using linear SVN Classifier ***")
+        print("*** Classifier using Linear SVN ***")
         
         svm_model_linear = SVC(kernel = 'linear', C = 1).fit(X_train, y_train)
         
@@ -128,8 +128,44 @@ class Software:
         print("Test set score: {:.6f}".format(svm_model_linear.score(X_test, y_test)))
         
         print("Train set score: {:.6f}".format(svm_model_linear.score(X_train, y_train)))
-        self.benchmark(start, end)
-        #self.benchmark(start, end, '*** Training Model ***')
+        self.benchmark(start, end, "### Linear SVN Prediction Time ###")
+        
+        
+        print("*** Classifier using Linear Regression ***")
+        lr = LinearRegression()
+        lr.fit(X_train, y_train)
+        
+        start = perf_counter()
+        y_pred = lr.predict(X_test)
+        end = perf_counter()
+        
+        # The coefficients
+        print('Coefficients: \n', lr.coef_)
+        
+        print("Test set predictions:\n {}".format(y_pred))
+        print("Mean squared error: %.3f " % mean_squared_error(y_test, y_pred))
+        # Explained variance score: 1 is perfect prediction
+        print('Variance score: %.3f ' % r2_score(y_test, y_pred))
+        print("Test set score: {:.6f}".format(lr.score(X_test, y_test)))
+        
+        print("Train set score: {:.6f}".format(lr.score(X_train, y_train)))
+        self.benchmark(start, end, "### Linear Regression Prediction Time ###")
+        
+        # Multi-layer Perceptron classifier.
+        print("*** Classifier using MLPC ***")
+        
+        MLPC = MLPClassifier(solver='lbfgs', random_state=0, hidden_layer_sizes=[10])
+        MLPC.fit(X_train, y_train)
+        
+        start = perf_counter()
+        y_pred = MLPC.predict(X_test)
+        end = perf_counter()
+        print("Test set predictions:\n {}".format(y_pred))
+        print("Test set score: {:.6f}".format(MLPC.score(X_test, y_test)))
+        
+        print("Train set score: {:.6f}".format(MLPC.score(X_train, y_train)))
+        self.benchmark(start, end, "### MLPC Prediction Time ###")
+        
         
     def segment_signal(self, data, window_size): 
         # referenced function meant for inputs
