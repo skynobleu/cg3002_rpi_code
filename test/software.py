@@ -84,26 +84,51 @@ class Software:
         #end = perf_counter()
         
         # Split dataset into test data and training data
+        
+        start = perf_counter()
         X_train, X_test, y_train, y_test = train_test_split(
         self.extractedData, self.target, random_state=5)
+        end = perf_counter()
+        self.benchmark(start, end, '*** Splitting datasets into test and training ***')
         
         # dataset information
-        print("*** Classifier using KNN ***")
+        
         print("X_train shape: {}".format(X_train.shape)) 
         print("y_train shape: {}".format(y_train.shape))
         
         print("\n")
+        
+        print("*** Classifier using KNN ***")
         #build model on knn classifier
+        
+        
         knn = KNeighborsClassifier(n_neighbors=6)
         knn.fit(X_train, y_train)
         print(knn)
         
+        start = perf_counter()
         y_pred = knn.predict(X_test)
+        end = perf_counter()
+        
         print("Test set predictions:\n {}".format(y_pred))
         print("Test set score: {:.6f}".format(knn.score(X_test, y_test)))
         
         print("Train set score: {:.6f}".format(knn.score(X_train, y_train)))
+        self.benchmark(start, end)
         
+        
+        print("*** Classifier using linear SVN Classifier ***")
+        
+        svm_model_linear = SVC(kernel = 'linear', C = 1).fit(X_train, y_train)
+        
+        start = perf_counter()
+        y_pred = svm_model_linear.predict(X_test)
+        end = perf_counter()
+        print("Test set predictions:\n {}".format(y_pred))
+        print("Test set score: {:.6f}".format(svm_model_linear.score(X_test, y_test)))
+        
+        print("Train set score: {:.6f}".format(svm_model_linear.score(X_train, y_train)))
+        self.benchmark(start, end)
         #self.benchmark(start, end, '*** Training Model ***')
         
     def segment_signal(self, data, window_size): 
@@ -313,5 +338,5 @@ class Software:
         if message and self.debug:
             print(message + '\nTime Elapsed: '+ " %.9f seconds" % (end-start) + '\n')
         else:
-            print('\nTime Elapsed: '+ " %.3f seconds" % (end-start) + '\n')
+            print('\nTime Elapsed: '+ " %.9f seconds" % (end-start) + '\n')
         
