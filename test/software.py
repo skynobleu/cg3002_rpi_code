@@ -5,23 +5,34 @@ import scipy as sp
 import matplotlib as mpl
 from sklearn import preprocessing
 from time import perf_counter, sleep
+from sklearn.preprocessing import LabelEncoder
+from sklearn.model_selection import train_test_split #for splitting training and test data
+from sklearn.svm import SVC # Using Linear SVM Classifier
+from sklearn.neural_network import MLPClassifier # Feedforward Neural Network Algorithm (Multilayer perceptron)
+from sklearn.svm import LinearSVC
+from sklearn.pipeline import Pipeline
+from sklearn.ensemble import GradientBoostingClassifier
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.neighbors import KNeighborsClassifier
+from sklearn.linear_model import LinearRegression
+
+
 
 class Software:
-
-   #class variables
-   fileID = 0
-
-   def __init__(self, debug = False):
+    
+    #class variables
+    fileID = 0
+    
+    def __init__(self, debug = False):
        Software.fileID += 1
        
        self.debug = debug
        self.rawData = None
        self.segmentedData = None
        self.target = None
-       
-      
     
-   def inputModule(self, csvName): #used to read in training data
+    
+    def inputModule(self, csvName): #used to read in training data
         # read CSV Data into a numpy array
         # consider looping once using default CSV library into numpy array
         
@@ -40,26 +51,25 @@ class Software:
         #    --- 5: Going Up\Down Stairs
         #    --- 6: Walking and Talking with Someone
         #    --- 7: Talking while Standing
-        
-        #self.target = np.genfromtxt(csvName, delimiter=',', usecols= (4), dtype= int)
-        #sleep(1)
-#        iris = load_iris()
-#        X = iris.data
-#        print(X)
-        
+                
         end = perf_counter()
-        
-        #print(self.target[1:10])
-        #print(self.data.shape[0])
-        
+ 
         self.benchmark(start, end, '*** Read From CSV ***')
+        
+        ### Encoding Label based on sample data activities.
+        labelEncoder = LabelEncoder()
+        labels = ['Working at Computer', 'Standing Up, Walking and Going up\down stairs', 'Standing', 'Walking',
+                  'Going Up\Down Stairs', 'Walking and Talking with Someone', 'Talking while Standing']
+        y_test = labelEncoder.fit_transform(labels)
+        
+        
         
         start = perf_counter()
         self.segmentationModule(self.rawData, 100)
         end = perf_counter()
         
         self.benchmark(start, end, '*** Segmentation Module ***')
-        #seg = self.segment_signal(self.rawData, 5) #proves that output signal is a 3 dimensional numpy array
+        # seg = self.segment_signal(self.rawData, 5) #proves that output signal is a 3 dimensional numpy array
         #print(seg[:10])
         
         start = perf_counter()
@@ -74,7 +84,14 @@ class Software:
         
         self.benchmark(start, end, '*** Feature Extraction Module ***')
         
-   def segment_signal(self, data, window_size): # referenced function meant for inputs
+        #start = perf_counter()
+        #self.classify(x_train, y_train, X_test, y_test, algorithm="neuro", mode="train")
+        #end = perf_counter()
+        
+        
+        #self.benchmark(start, end, '*** Training Model ***')
+        
+    def segment_signal(self, data, window_size): # referenced function meant for inputs
        
        N = data.shape[0]
        dim = data.shape[1]
@@ -88,7 +105,7 @@ class Software:
        return segments
        
         
-   def segmentationModule(self, data, frame_size): 
+    def segmentationModule(self, data, frame_size): 
        #frame_size refers to the number of samples per frame, no overlap
        #frame_size corresponds to the period given for example a sampling rate of 52Hz for particular data set
        
@@ -177,7 +194,7 @@ class Software:
            
             
        
-   def preprocessingModule(self, data): #preprocessing can be done inline with the segmentation  
+    def preprocessingModule(self, data): #preprocessing can be done inline with the segmentation  
        if self.segmentedData is not None and self.numberOfSegments is not None:
            
            #normalize signal data
@@ -193,7 +210,7 @@ class Software:
        else:
            print('data not ready for preprocessing')
            
-   def featureExtractionModule(self, data):
+    def featureExtractionModule(self, data):
        
        
        
@@ -249,10 +266,36 @@ class Software:
        if self.debug:
            print(featureData[:3])
        
-       
-   def benchmark(self, start, end, message = False): #used to determine performance of algorithm
-       if message and self.debug:
-           print(message + '\nTime Elapsed: '+ " %.9f seconds" % (end-start) + '\n')
-       else:
-           print('\nTime Elapsed: '+ " %.3f seconds" % (end-start) + '\n')
+        
+    def classify(self, X_train, y_train, X_test, y_test, algorithm="", mode="train"):
+        
+        if algorithm == "LinearRegression":
+            classifier = LinearRegression()
+        elif algorithm == "MLPClassifier":
+            classifier = MLPClassifier(solver='lbfgs', random_state=0,hidden_layer_sizes=[10])
+        elif algorithm == "GradientBoostingClassifier":
+            classifier = GradientBoostingClassifier(random_state=0)
+        elif algorithm == "RandomForestClassifier":
+            classifier = RandomForestClassifier(n_estimators=5, random_state=2)
+        elif algorithm == "LinearSVC":
+            classifier = LinearSVC()
+        elif algorithm == "SVC":
+            classifier = SVC(kernel='rbf', C=10, gamma=0.1)
+        else:
+            classifier = KNeighborsClassifier(n_neighbors=6)
+            
+        if mode == "train":
+            classifier.fit(X_train, y_train)
+            print("Accuracy on training set: {:.2f}".format(classifier.score(X_train, y_train)))
+        elif mode == "test":
+            prediction = classifier.predict(X_test)
+            print("Accuracy on test set: {:.2f}".format(classifier.score(X_test, y_test)))
+        
+        return prediction
+    
+    def benchmark(self, start, end, message = False): #used to determine performance of algorithm
+        if message and self.debug:
+            print(message + '\nTime Elapsed: '+ " %.9f seconds" % (end-start) + '\n')
+        else:
+            print('\nTime Elapsed: '+ " %.3f seconds" % (end-start) + '\n')
         
