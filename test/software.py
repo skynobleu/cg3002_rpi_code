@@ -11,13 +11,15 @@ class Software:
    #class variables
    fileID = 0
 
-   def __init__(self):
+   def __init__(self, debug = False):
        Software.fileID += 1
+       
+       self.debug = debug
        self.rawData = None
        self.data = None
        self.target = None
+       
       
-
     
    def inputModule(self, csvName): #used to read in training data
         # read CSV Data into a numpy array
@@ -52,10 +54,19 @@ class Software:
         
         self.benchmark(start, end, '*** Read From CSV ***')
         
-        #self.segmentationModule(self.rawData, 5)
-        seg = self.segment_signal(self.rawData, 5)
-        print(seg[:10])
-        #self.preprocessingModule()
+        start = perf_counter()
+        self.segmentationModule(self.rawData, 5)
+        end = perf_counter()
+        
+        self.benchmark(start, end, '*** Segmentation Module ***')
+        #seg = self.segment_signal(self.rawData, 5) #proves that output signal is a 3 dimensional numpy array
+        #print(seg[:10])
+        
+        start = perf_counter()
+        self.preprocessingModule()
+        end = perf_counter()
+        
+        self.benchmark(start, end, '*** Preprocessing Module ***')
         
    def segment_signal(self, data, window_size):
        
@@ -73,7 +84,7 @@ class Software:
         
    def segmentationModule(self, data, frame_size): #frame_size refers to the number of samples per frame
        if data is not None:
-           start = perf_counter()
+           
            #obtain number of rows of data / data samples
            N = data.shape[0]
            
@@ -93,15 +104,19 @@ class Software:
                    K += 1
                    
                    #move to next frame
-                   i += frame_size
-                   
+                   i += frame_size           
                    
                else:
                    i += 1
            
            print("Number of valid frames: " + str(K))
+           
            #create empty numpy array
            segments = np.empty((K, frame_size, dim))
+           self.norm_data = np.empty((K, frame_size, dim)) #for preprocessing later
+                     
+           #store as instance variable
+           self.numberOfSegments = K
            
            #indexes
            i = 0
@@ -133,7 +148,6 @@ class Software:
                else:
                    i += 1
            
-           end = perf_counter()
            
            #determine number of valid frames
            valid_frames = len(target)
@@ -149,19 +163,26 @@ class Software:
            print(target[:10])
            print("Segmented Data:")
            print(segments[-10:])
-           self.benchmark(start, end, "*** Segment Data ***")
+           
             
        
    def preprocessingModule(self):
-       if self.data is not None:
+       if self.data is not None and self.numberOfSegments is not None:
+           
            #normalize signal data
-           self.norm_data = preprocessing.normalize(self.data[0])
-           print(self.norm_data)
+           #self.norm_data = preprocessing.normalize(self.data[0])
+           
+           for i in range(self.numberOfSegments):
+               self.norm_data[i] = preprocessing.normalize(self.data[i])
+                  
+           print("### normalised data set ###")    
+           print(self.norm_data[:10])
+           
        else:
            print('data not ready for preprocessing')
                    
    def benchmark(self, start, end, message = False): #used to determine performance of algorithm
-       if message:
+       if message and self.debug:
            print(message + '\nTime Elapsed: '+ " %.9f seconds" % (end-start) + '\n')
        else:
            print('\nTime Elapsed: '+ " %.3f seconds" % (end-start) + '\n')
