@@ -30,6 +30,7 @@ class Software:
        self.rawData = None
        self.segmentedData = None
        self.target = None
+       self.extractedData = None
     
     
     def inputModule(self, csvName): #used to read in training data
@@ -56,16 +57,8 @@ class Software:
  
         self.benchmark(start, end, '*** Read From CSV ***')
         
-        ### Encoding Label based on sample data activities.
-        labelEncoder = LabelEncoder()
-        labels = ['Working at Computer', 'Standing Up, Walking and Going up\down stairs', 'Standing', 'Walking',
-                  'Going Up\Down Stairs', 'Walking and Talking with Someone', 'Talking while Standing']
-        y_test = labelEncoder.fit_transform(labels)
-        
-        
-        
         start = perf_counter()
-        self.segmentationModule(self.rawData, 100)
+        self.segmentationModule(self.rawData, 180)
         end = perf_counter()
         
         self.benchmark(start, end, '*** Segmentation Module ***')
@@ -84,14 +77,37 @@ class Software:
         
         self.benchmark(start, end, '*** Feature Extraction Module ***')
         
+        #print("size of input: " + str(self.extractedData.shape[0]) + " size of target: "+ str(self.target.shape[0]) + "\n")
+        
         #start = perf_counter()
         #self.classify(x_train, y_train, X_test, y_test, algorithm="neuro", mode="train")
         #end = perf_counter()
         
+        # Split dataset into test data and training data
+        X_train, X_test, y_train, y_test = train_test_split(
+        self.extractedData, self.target, random_state=5)
+        
+        # dataset information
+        print("*** Classifier using KNN ***")
+        print("X_train shape: {}".format(X_train.shape)) 
+        print("y_train shape: {}".format(y_train.shape))
+        
+        print("\n")
+        #build model on knn classifier
+        knn = KNeighborsClassifier(n_neighbors=6)
+        knn.fit(X_train, y_train)
+        print(knn)
+        
+        y_pred = knn.predict(X_test)
+        print("Test set predictions:\n {}".format(y_pred))
+        print("Test set score: {:.6f}".format(knn.score(X_test, y_test)))
+        
+        print("Train set score: {:.6f}".format(knn.score(X_train, y_train)))
         
         #self.benchmark(start, end, '*** Training Model ***')
         
-    def segment_signal(self, data, window_size): # referenced function meant for inputs
+    def segment_signal(self, data, window_size): 
+        # referenced function meant for inputs
        
        N = data.shape[0]
        dim = data.shape[1]
@@ -188,7 +204,7 @@ class Software:
            if self.debug:
                print("Calculated Target frames: " + str(valid_frames) + " Data frames: " + str(actual_frames) + "\n")
                print("Target Data:")
-               print(target[:3])
+               print(target)
                print("Segmented Data:")
                print(segments[-3:])
            
