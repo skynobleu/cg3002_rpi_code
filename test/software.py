@@ -16,7 +16,7 @@ class Software:
        
        self.debug = debug
        self.rawData = None
-       self.data = None
+       self.segmentedData = None
        self.target = None
        
       
@@ -55,7 +55,7 @@ class Software:
         self.benchmark(start, end, '*** Read From CSV ***')
         
         start = perf_counter()
-        self.segmentationModule(self.rawData, 5)
+        self.segmentationModule(self.rawData, 100)
         end = perf_counter()
         
         self.benchmark(start, end, '*** Segmentation Module ***')
@@ -63,12 +63,18 @@ class Software:
         #print(seg[:10])
         
         start = perf_counter()
-        self.preprocessingModule()
+        self.preprocessingModule(self.segmentedData)
         end = perf_counter()
         
         self.benchmark(start, end, '*** Preprocessing Module ***')
         
-   def segment_signal(self, data, window_size):
+        start = perf_counter()
+        self.featureExtractionModule(self.segmentedData)
+        end = perf_counter()
+        
+        self.benchmark(start, end, '*** Feature Extraction Module ***')
+        
+   def segment_signal(self, data, window_size): # referenced function meant for inputs
        
        N = data.shape[0]
        dim = data.shape[1]
@@ -116,7 +122,7 @@ class Software:
            
            #create empty numpy array
            segments = np.empty((K, frame_size, dim))
-           self.norm_data = np.empty((K, frame_size, dim)) #for preprocessing later
+           self.normData = np.empty((K, frame_size, dim)) #for preprocessing later
                      
            #store as instance variable
            self.numberOfSegments = K
@@ -160,35 +166,40 @@ class Software:
            
            #convert target to numpy array
            self.target = np.asarray(target)
-           self.data = segments
+           self.segmentedData = segments
            
            if self.debug:
                print("Calculated Target frames: " + str(valid_frames) + " Data frames: " + str(actual_frames) + "\n")
                print("Target Data:")
-               print(target[:10])
+               print(target[:3])
                print("Segmented Data:")
-               print(segments[-10:])
+               print(segments[-3:])
            
             
        
-   def preprocessingModule(self): #preprocessing can be done inline with the segmentation  
-       if self.data is not None and self.numberOfSegments is not None:
+   def preprocessingModule(self, data): #preprocessing can be done inline with the segmentation  
+       if self.segmentedData is not None and self.numberOfSegments is not None:
            
            #normalize signal data
            #self.norm_data = preprocessing.normalize(self.data[0])
            
            for i in range(self.numberOfSegments):
-               self.norm_data[i] = preprocessing.normalize(self.data[i])
+               self.normData[i] = preprocessing.normalize(data[i])
                
            if self.debug:       
                print("### normalised data set ###")    
-               print(self.norm_data[:10])
+               print(self.normData[:3])
            
        else:
            print('data not ready for preprocessing')
            
    def featureExtractionModule(self, data):
+       
+       
+       
        # 12 features will be selected from the accelerometer readings
+       featureData = np.empty((self.numberOfSegments, 12))
+       
        # to use the data for classification, we need to convert the data set into a 2D NumPy array 
        
        #Averages
@@ -203,9 +214,40 @@ class Software:
        #Correlation
        #10. Correlation X, Y   11. Correlation Y, Z    12. Correlation Z, X
        for i in range(self.numberOfSegments):
-           print("placeholder")
-       
-       
+           
+           #obtain only the first column => accel_x values and etc for accel_y and accel_z
+           x_sequence = data[i][:, 0]
+           y_sequence = data[i][:, 1]
+           z_sequence = data[i][:, 2]
+           
+           x_mean = np.mean(x_sequence, dtype=np.float64)
+           y_mean = np.mean(y_sequence, dtype=np.float64)
+           z_mean = np.mean(z_sequence, dtype=np.float64)
+           
+           x_std = np.std(x_sequence, dtype=np.float64)
+           y_std = np.std(y_sequence, dtype=np.float64)
+           z_std = np.std(z_sequence, dtype=np.float64)
+           
+           #obtain only the cov(X, Y) or corr(X, Y) value by the 0th row, 1st column of cov / cor matrix          
+           xy_cov = np.cov(x_sequence, y_sequence, ddof=0)[0, 1]
+           yz_cov = np.cov(y_sequence, z_sequence, ddof=0)[0, 1]
+           zx_cov = np.cov(z_sequence, x_sequence, ddof=0)[0, 1]
+           
+           xy_corr = np.corrcoef(x_sequence, y_sequence)[0, 1]
+           yz_corr = np.corrcoef(y_sequence, z_sequence)[0, 1]
+           zx_corr = np.corrcoef(z_sequence, x_sequence)[0, 1]
+           
+           featureData[i] = np.array([x_mean, y_mean, z_mean, x_std, y_std, z_std, xy_cov, yz_cov, zx_cov, xy_corr, yz_corr, zx_corr], dtype=np.float64)
+#           print(x_sequence)
+#           print(x_std)
+#           print(xy_cov)
+#           print(xy_corr)
+#           print(featureData[i])
+#           break
+    
+       self.extractedData = featureData
+       if self.debug:
+           print(featureData[:3])
        
        
    def benchmark(self, start, end, message = False): #used to determine performance of algorithm
