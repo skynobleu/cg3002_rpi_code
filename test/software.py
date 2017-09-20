@@ -82,7 +82,10 @@ class Software:
        return segments
        
         
-   def segmentationModule(self, data, frame_size): #frame_size refers to the number of samples per frame
+   def segmentationModule(self, data, frame_size): 
+       #frame_size refers to the number of samples per frame, no overlap
+       #frame_size corresponds to the period given for example a sampling rate of 52Hz for particular data set
+       
        if data is not None:
            
            #obtain number of rows of data / data samples
@@ -109,7 +112,7 @@ class Software:
                else:
                    i += 1
            
-           print("Number of valid frames: " + str(K))
+           #print("Number of valid frames: " + str(K))
            
            #create empty numpy array
            segments = np.empty((K, frame_size, dim))
@@ -153,20 +156,22 @@ class Software:
            valid_frames = len(target)
            actual_frames = segments.shape[0]
            
-           print("valid frames: " + str(valid_frames) + " actual frames: " + str(actual_frames) + "\n")
+           
            
            #convert target to numpy array
            self.target = np.asarray(target)
            self.data = segments
            
-           print("Target Data:")
-           print(target[:10])
-           print("Segmented Data:")
-           print(segments[-10:])
+           if self.debug:
+               print("Calculated Target frames: " + str(valid_frames) + " Data frames: " + str(actual_frames) + "\n")
+               print("Target Data:")
+               print(target[:10])
+               print("Segmented Data:")
+               print(segments[-10:])
            
             
        
-   def preprocessingModule(self):
+   def preprocessingModule(self): #preprocessing can be done inline with the segmentation  
        if self.data is not None and self.numberOfSegments is not None:
            
            #normalize signal data
@@ -174,13 +179,35 @@ class Software:
            
            for i in range(self.numberOfSegments):
                self.norm_data[i] = preprocessing.normalize(self.data[i])
-                  
-           print("### normalised data set ###")    
-           print(self.norm_data[:10])
+               
+           if self.debug:       
+               print("### normalised data set ###")    
+               print(self.norm_data[:10])
            
        else:
            print('data not ready for preprocessing')
-                   
+           
+   def featureExtractionModule(self, data):
+       # 12 features will be selected from the accelerometer readings
+       # to use the data for classification, we need to convert the data set into a 2D NumPy array 
+       
+       #Averages
+       #1. Average X    2. Average Y   3. Average Z
+       
+       #Standard Deviations
+       #4. Standard deviation X 5. Standard deviation Y 6. Standard deviation Z
+       
+       #Covariance
+       #7. Covariance X, Y    8. Covariance Y, Z    9. Covariance Z, X
+       
+       #Correlation
+       #10. Correlation X, Y   11. Correlation Y, Z    12. Correlation Z, X
+       for i in range(self.numberOfSegments):
+           print("placeholder")
+       
+       
+       
+       
    def benchmark(self, start, end, message = False): #used to determine performance of algorithm
        if message and self.debug:
            print(message + '\nTime Elapsed: '+ " %.9f seconds" % (end-start) + '\n')
