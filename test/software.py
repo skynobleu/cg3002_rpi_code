@@ -73,6 +73,7 @@ class Software:
         
         start = perf_counter()
         self.featureExtractionModule(self.segmentedData)
+        #self.featureExtractionModule(self.normData)
         end = perf_counter()
         
         self.benchmark(start, end, '*** Feature Extraction Module ***')
