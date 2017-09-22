@@ -8,7 +8,7 @@ from time import perf_counter, sleep
 from sklearn.preprocessing import LabelEncoder
 from sklearn.model_selection import train_test_split #for splitting training and test data
 from sklearn.svm import SVC # Using Linear SVM Classifier
-from sklearn.neural_network import MLPClassifier # Feedforward Neural Network Algorithm (Multilayer perceptron)
+from sklearn.neural_network import MLPClassifier #Feedforward Neural Network Algorithm (Multilayer perceptron)
 from sklearn.svm import LinearSVC
 from sklearn.pipeline import Pipeline
 from sklearn.ensemble import GradientBoostingClassifier
@@ -16,7 +16,12 @@ from sklearn.ensemble import RandomForestClassifier
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.linear_model import LinearRegression
 from sklearn.metrics import mean_squared_error, r2_score
-
+from sklearn.model_selection import KFold
+from sklearn.metrics import confusion_matrix
+from sklearn.model_selection import cross_val_score
+from sklearn.model_selection import GridSearchCV
+from sklearn.metrics import classification_report
+from sklearn.metrics import accuracy_score
 
 class Software:
     
@@ -53,12 +58,14 @@ class Software:
         #    --- 6: Walking and Talking with Someone
         #    --- 7: Talking while Standing
                 
+        labels = ['Working at Computer', 'Standing Up, Walking and Going up/down stairs', 'Standing', 'Walking', 'Going Up/Down stairs', 'Walking and Talking with Someone', 'Talking while Standing']
+
         end = perf_counter()
  
         self.benchmark(start, end, '*** Read From CSV ***')
         
         start = perf_counter()
-        self.segmentationModule(self.rawData, 180)
+        self.segmentationModule(self.rawData, 120)
         end = perf_counter()
         
         self.benchmark(start, end, '*** Segmentation Module ***')
@@ -78,17 +85,15 @@ class Software:
         
         self.benchmark(start, end, '*** Feature Extraction Module ***')
         
-        #print("size of input: " + str(self.extractedData.shape[0]) + " size of target: "+ str(self.target.shape[0]) + "\n")
+        # print("size of input: " + str(self.extractedData.shape[0]) + " size of target: "+ str(self.target.shape[0]) + "\n")
+    
         
-        #start = perf_counter()
-        #self.classify(x_train, y_train, X_test, y_test, algorithm="neuro", mode="train")
-        #end = perf_counter()
-        
+        X = self.extractedData
+        y = self.target
+
         # Split dataset into test data and training data
-        
         start = perf_counter()
-        X_train, X_test, y_train, y_test = train_test_split(
-        self.extractedData, self.target, random_state=5)
+        X_train, X_test, y_train, y_test = train_test_split(self.extractedData, self.target, random_state=5)
         end = perf_counter()
         self.benchmark(start, end, '*** Splitting datasets into test and training ***')
         
@@ -97,77 +102,196 @@ class Software:
         print("X_train shape: {}".format(X_train.shape)) 
         print("y_train shape: {}".format(y_train.shape))
         
+        print("Size of training set: {} size of test set: {}".format(X_train.shape[0], X_test.shape[0]))
         print("\n")
         
-        print("*** Classifier using KNN ***")
-        #build model on knn classifier
+        # print("*** Classifier using KNN ***")
+        # #build model on knn classifier
         
         
-        knn = KNeighborsClassifier(n_neighbors=6)
-        knn.fit(X_train, y_train)
-        print(knn)
+        # # knn = KNeighborsClassifier(n_neighbors=5)
+        # # knn.fit(X_train, y_train)
+        # # print(knn)
+       
+        # start = perf_counter()
+        # # y_pred = knn.predict(X_test)
+        # kfold = KFold(n_splits=10, shuffle=True, random_state=0)
+        # classifier = KNeighborsClassifier(n_neighbors=5)
+        # scores = cross_val_score(classifier, self.extractedData, self.target, cv=kfold)
+
+        # for fold_index in range(10):
+        #     print('In the %i fold, the classification accuracy is %f' %(fold_index+1, scores[fold_index]))
         
-        start = perf_counter()
-        y_pred = knn.predict(X_test)
-        end = perf_counter()
+        # print('Average classification accuracy is {:.2f}'.format(scores.mean()))
+        # end = perf_counter()
         
-        print("Test set predictions:\n {}".format(y_pred))
-        print("Test set score: {:.6f}".format(knn.score(X_test, y_test)))
+        # print("\n\n\n")
+
+        # print("naive grid search for best parameters (n_neighbors)")
+        # X_train, X_test, y_train, y_test = train_test_split(self.extractedData, self.target, random_state=0)
+        # # split data into train+validation set and test set 
+        # X_trainval, X_test, y_trainval, y_test = train_test_split(iris.data, iris.target, random_state=0)
+        # # split train+validation set into training and validation sets 
+        # X_train, X_valid, y_train, y_valid = train_test_split(X_trainval, y_trainval, random_state=1)
+        # print("Size of training set: {} size of validation set: {} size of test set:"
+        # " {}\n".format(X_train.shape[0], X_valid.shape[0], X_test.shape[0]))
+        # print("Size of training set: {} size of test set: {}".format(X_train.shape[0], X_test.shape[0]))
+        # best_score = 0
+        # for n_neighbors in range(1,11): 
+        #     knn = KNeighborsClassifier(n_neighbors=n_neighbors)
+        #     knn.fit(X_train, y_train)
+        #     score = knn.score(X_test, y_test)
+        #     # if we got a better score, store the score and parameters 
+        #     if score > best_score:
+        #         best_score = score
+        #         best_parameters = n_neighbors
+    
+        # print("Best score: {:.2f}".format(best_score)) 
+        # print("Best parameters: {}".format(best_parameters))      
+
         
-        print("Train set score: {:.6f}".format(knn.score(X_train, y_train)))
-        self.benchmark(start, end, "### KNN Prediction Time ###")
+        # print("Test set predictions:\n {}".format(y_pred))
+        # print("Test set score: {:.6f}".format(knn.score(X_test, y_test)))
         
+        # print("Train set score: {:.6f}".format(knn.score(X_train, y_train)))
+        # self.benchmark(start, end, "### KNN Prediction Time ###")
         
+        # print("*** 10 fold cross validation ***")
+        
+        # kfold = KFold(n_splits=10, shuffle=True)
+        # fold_index = 0
+        # for train, test in kfold.split(X):
+        #     model = KNeighborsClassifier(n_neighbors=5).fit(X[train], y[train])
+        #     model_predictions = knn.predict(X[test])
+        #     accuracy = model.score(X[test], y[test])
+        #     cm = confusion_matrix(y[test], model_predictions)
+        #     print('In the %i fold, the classification accuracy is %f' %(fold_index, accuracy))
+        #     print('And the confusion matrix is: ')
+        #     print(cm)
+        #     fold_index += 1 
+        print("\n")
         print("*** Classifier using Linear SVN ***")
         
-        svm_model_linear = SVC(kernel = 'linear', C = 1).fit(X_train, y_train)
+        # svm_model_linear = SVC(kernel = 'linear', C = 1).fit(X_train, y_train)
         
         start = perf_counter()
-        y_pred = svm_model_linear.predict(X_test)
+        # y_pred = svm_model_linear.predict(X_test)
+        
+        
+        
+        # end = perf_counter()
+        
+        # print("naive grid search for best parameters (gamma, C)")
+        # X_train, X_test, y_train, y_test = train_test_split(self.extractedData, self.target, random_state=0)
+        # print("Size of training set: {} size of test set: {}".format(X_train.shape[0], X_test.shape[0]))
+        # best_score = 0
+        # for gamma in [0.001, 0.01, 0.1, 1, 10, 100]: 
+        #     for C in [0.001, 0.01, 0.1, 1, 10, 100]:
+        #         # for each combination of parameters, train an SVC
+        #         svm = SVC(gamma=gamma, C=C)
+        #         svm.fit(X_train, y_train)
+        #         # evaluate the SVC on the test set
+        #         score = svm.score(X_test, y_test)
+        #         # if we got a better score, store the score and parameters 
+        #         if score > best_score:
+        #             best_score = score
+        #             best_parameters = {'C': C, 'gamma': gamma}
+        
+        # print("Best score: {:.2f}".format(best_score)) 
+        # print("Best parameters: {}".format(best_parameters))       
+        
+
+        print("*** Using Scikit GridSearchCV ***")
+        # param_grid = [{'kernel': ['rbf'],
+        #            'C': [0.001, 0.01, 0.1, 1, 10, 100],
+        #            'gamma': [0.001, 0.01, 0.1, 1, 10, 100]},
+        #           {'kernel': ['linear'],'C': [0.001, 0.01, 0.1, 1, 10, 100]}] 
+        # param_grid = {'kernel': ['linear'],'C': [0.001, 0.01, 0.1, 1, 10, 100]}
+        param_grid = {'kernel': ['linear'],'C': [0.001]}
+
+        # print("List of grids:\n{}".format(param_grid))
+        print("Parameter grid:\n{}".format(param_grid))
+        grid_search = GridSearchCV(SVC(), param_grid, cv=10)
+        X_train, X_test, y_train, y_test = train_test_split(self.extractedData, self.target, random_state=0)
+        grid_search.fit(X_train, y_train)
+        y_pred = grid_search.predict(X_test)
+        print("\n")
+        print("Test set score: {:.2f}".format(grid_search.score(X_test, y_test)))
+        print("Best parameters: {}".format(grid_search.best_params_))
+        print("Best cross-validation score: {:.2f}".format(grid_search.best_score_))
+        print("\n")
+        print("Accuracy: {:.3f}".format(accuracy_score(y_test, y_pred))) 
+        print("Confusion matrix:\n{}".format(confusion_matrix(y_test, y_pred)))        
+        print(classification_report(y_test,y_pred))
+        print("\n")
+        # convert to DataFrame
+        results = pd.DataFrame(grid_search.cv_results_) 
+        # show the first 5 rows 
+        print(results.head())
+        
         end = perf_counter()
-        print("Test set predictions:\n {}".format(y_pred))
-        print("Test set score: {:.6f}".format(svm_model_linear.score(X_test, y_test)))
+        print("*** GridSearchCV for KNeighborsClassifier \n")
+    
+        param_grid = {'n_neighbors': [1,2,3,4,5,6,7,8,9,10]}
+        print("Parameter grid:\n{}".format(param_grid))
+        grid_search = GridSearchCV(KNeighborsClassifier(), param_grid, cv=10)
+        X_train, X_test, y_train, y_test = train_test_split(self.extractedData, self.target, random_state=0)
+        grid_search.fit(X_train, y_train)
+        y_pred = grid_search.predict(X_test)
+        print("Test set score: {:.2f}".format(grid_search.score(X_test, y_test)))
+        print("Best parameters: {}".format(grid_search.best_params_))
+        print("Best cross-validation score: {:.2f}".format(grid_search.best_score_))
+        print("\n")
+        print("Accuracy: {:.3f}".format(accuracy_score(y_test, y_pred))) 
+        print("Confusion matrix:\n{}".format(confusion_matrix(y_test, y_pred)))        
+        print(classification_report(y_test,y_pred))
+        print("\n")
+        # convert to DataFrame
+        results = pd.DataFrame(grid_search.cv_results_) 
+        # show the first 5 rows 
+        print(results.head())
+
+        # print("Test set predictions:\n {}".format(y_pred))
+        # print("Test set score: {:.6f}".format(svm_model_linear.score(X_test, y_test)))
         
-        print("Train set score: {:.6f}".format(svm_model_linear.score(X_train, y_train)))
-        self.benchmark(start, end, "### Linear SVN Prediction Time ###")
+        # print("Train set score: {:.6f}".format(svm_model_linear.score(X_train, y_train)))
+        # self.benchmark(start, end, "### Linear SVN Prediction Time ###")
         
+
+        # print("*** Classifier using Linear Regression ***")
+        # lr = LinearRegression()
+        # lr.fit(X_train, y_train)
         
-        print("*** Classifier using Linear Regression ***")
-        lr = LinearRegression()
-        lr.fit(X_train, y_train)
+        # start = perf_counter()
+        # y_pred = lr.predict(X_test)
+        # end = perf_counter()
         
-        start = perf_counter()
-        y_pred = lr.predict(X_test)
-        end = perf_counter()
+        # # The coefficients
+        # print('Coefficients: \n', lr.coef_)
         
-        # The coefficients
-        print('Coefficients: \n', lr.coef_)
+        # print("Test set predictions:\n {}".format(y_pred))
+        # print("Mean squared error: %.3f " % mean_squared_error(y_test, y_pred))
+        # # Explained variance score: 1 is perfect prediction
+        # print('Variance score: %.3f ' % r2_score(y_test, y_pred))
+        # print("Test set score: {:.6f}".format(lr.score(X_test, y_test)))
         
-        print("Test set predictions:\n {}".format(y_pred))
-        print("Mean squared error: %.3f " % mean_squared_error(y_test, y_pred))
-        # Explained variance score: 1 is perfect prediction
-        print('Variance score: %.3f ' % r2_score(y_test, y_pred))
-        print("Test set score: {:.6f}".format(lr.score(X_test, y_test)))
+        # print("Train set score: {:.6f}".format(lr.score(X_train, y_train)))
+        # self.benchmark(start, end, "### Linear Regression Prediction Time ###")
         
-        print("Train set score: {:.6f}".format(lr.score(X_train, y_train)))
-        self.benchmark(start, end, "### Linear Regression Prediction Time ###")
-        
+
+
         # Multi-layer Perceptron classifier.
-        print("*** Classifier using MLPC ***")
+        # print("*** Classifier using MLPC ***")
         
-        MLPC = MLPClassifier(solver='lbfgs', random_state=0, hidden_layer_sizes=[10])
-        MLPC.fit(X_train, y_train)
+        # MLPC = MLPClassifier(solver='lbfgs', random_state=0, hidden_layer_sizes=[10])
+        # MLPC.fit(X_train, y_train)
         
-        start = perf_counter()
-        y_pred = MLPC.predict(X_test)
-        end = perf_counter()
-        print("Test set predictions:\n {}".format(y_pred))
-        print("Test set score: {:.6f}".format(MLPC.score(X_test, y_test)))
-        
-        print("Train set score: {:.6f}".format(MLPC.score(X_train, y_train)))
-        self.benchmark(start, end, "### MLPC Prediction Time ###")
-        
-        
+        # start = perf_counter()
+        # y_pred = MLPC.predict(X_test)
+        # end = perf_counter()
+        # print("Test set predictions:\n {}".format(y_pred))
+        # print("Test set score: {:.6f}".format(MLPC.score(X_test, y_test)))
+    
     def segment_signal(self, data, window_size): 
         # referenced function meant for inputs
        
@@ -343,37 +467,14 @@ class Software:
        self.extractedData = featureData
        if self.debug:
            print(featureData[:3])
-       
-        
-    def classify(self, X_train, y_train, X_test, y_test, algorithm="", mode="train"):
-        
-        if algorithm == "LinearRegression":
-            classifier = LinearRegression()
-        elif algorithm == "MLPClassifier":
-            classifier = MLPClassifier(solver='lbfgs', random_state=0,hidden_layer_sizes=[10])
-        elif algorithm == "GradientBoostingClassifier":
-            classifier = GradientBoostingClassifier(random_state=0)
-        elif algorithm == "RandomForestClassifier":
-            classifier = RandomForestClassifier(n_estimators=5, random_state=2)
-        elif algorithm == "LinearSVC":
-            classifier = LinearSVC()
-        elif algorithm == "SVC":
-            classifier = SVC(kernel='rbf', C=10, gamma=0.1)
-        else:
-            classifier = KNeighborsClassifier(n_neighbors=6)
-            
-        if mode == "train":
-            classifier.fit(X_train, y_train)
-            print("Accuracy on training set: {:.2f}".format(classifier.score(X_train, y_train)))
-        elif mode == "test":
-            prediction = classifier.predict(X_test)
-            print("Accuracy on test set: {:.2f}".format(classifier.score(X_test, y_test)))
-        
-        return prediction
+    
     
     def benchmark(self, start, end, message = False): #used to determine performance of algorithm
         if message and self.debug:
             print(message + '\nTime Elapsed: '+ " %.9f seconds" % (end-start) + '\n')
         else:
             print('\nTime Elapsed: '+ " %.9f seconds" % (end-start) + '\n')
-        
+
+   
+
+       
