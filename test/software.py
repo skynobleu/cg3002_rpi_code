@@ -65,7 +65,7 @@ class Software:
         self.benchmark(start, end, '*** Read From CSV ***')
         
         start = perf_counter()
-        self.segmentationModule(self.rawData, 120)
+        self.segmentationModule(self.rawData, 120, True)
         end = perf_counter()
         
         self.benchmark(start, end, '*** Segmentation Module ***')
@@ -170,7 +170,7 @@ class Software:
         #     print(cm)
         #     fold_index += 1 
         print("\n")
-        print("*** Classifier using Linear SVN ***")
+
         
         # svm_model_linear = SVC(kernel = 'linear', C = 1).fit(X_train, y_train)
         
@@ -199,42 +199,12 @@ class Software:
         
         # print("Best score: {:.2f}".format(best_score)) 
         # print("Best parameters: {}".format(best_parameters))       
-        
-
-        print("*** Using Scikit GridSearchCV ***")
-        # param_grid = [{'kernel': ['rbf'],
-        #            'C': [0.001, 0.01, 0.1, 1, 10, 100],
-        #            'gamma': [0.001, 0.01, 0.1, 1, 10, 100]},
-        #           {'kernel': ['linear'],'C': [0.001, 0.01, 0.1, 1, 10, 100]}] 
-        # param_grid = {'kernel': ['linear'],'C': [0.001, 0.01, 0.1, 1, 10, 100]}
-        param_grid = {'kernel': ['linear'],'C': [0.001]}
-
-        # print("List of grids:\n{}".format(param_grid))
-        print("Parameter grid:\n{}".format(param_grid))
-        grid_search = GridSearchCV(SVC(), param_grid, cv=10)
-        X_train, X_test, y_train, y_test = train_test_split(self.extractedData, self.target, random_state=0)
-        grid_search.fit(X_train, y_train)
-        y_pred = grid_search.predict(X_test)
-        print("\n")
-        print("Test set score: {:.2f}".format(grid_search.score(X_test, y_test)))
-        print("Best parameters: {}".format(grid_search.best_params_))
-        print("Best cross-validation score: {:.2f}".format(grid_search.best_score_))
-        print("\n")
-        print("Accuracy: {:.3f}".format(accuracy_score(y_test, y_pred))) 
-        print("Confusion matrix:\n{}".format(confusion_matrix(y_test, y_pred)))        
-        print(classification_report(y_test,y_pred))
-        print("\n")
-        # convert to DataFrame
-        results = pd.DataFrame(grid_search.cv_results_) 
-        # show the first 5 rows 
-        print(results.head())
-        
-        end = perf_counter()
         print("*** GridSearchCV for KNeighborsClassifier \n")
-    
-        param_grid = {'n_neighbors': [1,2,3,4,5,6,7,8,9,10]}
+        kfold = KFold(n_splits=10, shuffle=True, random_state=0)
+
+        param_grid = {'n_neighbors': range(1, 20)}
         print("Parameter grid:\n{}".format(param_grid))
-        grid_search = GridSearchCV(KNeighborsClassifier(), param_grid, cv=10)
+        grid_search = GridSearchCV(KNeighborsClassifier(), param_grid, cv=kfold)
         X_train, X_test, y_train, y_test = train_test_split(self.extractedData, self.target, random_state=0)
         grid_search.fit(X_train, y_train)
         y_pred = grid_search.predict(X_test)
@@ -242,14 +212,67 @@ class Software:
         print("Best parameters: {}".format(grid_search.best_params_))
         print("Best cross-validation score: {:.2f}".format(grid_search.best_score_))
         print("\n")
-        print("Accuracy: {:.3f}".format(accuracy_score(y_test, y_pred))) 
-        print("Confusion matrix:\n{}".format(confusion_matrix(y_test, y_pred)))        
-        print(classification_report(y_test,y_pred))
+        print("Accuracy: {:.3f}".format(accuracy_score(y_test, y_pred)))
+        print("Confusion matrix:\n{}".format(confusion_matrix(y_test, y_pred)))
+        print(classification_report(y_test, y_pred))
         print("\n")
         # convert to DataFrame
-        results = pd.DataFrame(grid_search.cv_results_) 
-        # show the first 5 rows 
+        results = pd.DataFrame(grid_search.cv_results_)
+        # show the first 5 rows
         print(results.head())
+
+
+
+
+        # print("*** Using Scikit GridSearchCV ***")
+        # # param_grid = [{'kernel': ['rbf'],
+        # #            'C': [0.001, 0.01, 0.1, 1, 10, 100],
+        # #            'gamma': [0.001, 0.01, 0.1, 1, 10, 100]},
+        # #           {'kernel': ['linear'],'C': [0.001, 0.01, 0.1, 1, 10, 100]}]
+        # # param_grid = {'kernel': ['linear'],'C': [0.001, 0.01, 0.1, 1, 10, 100]}
+        # param_grid = {'kernel': ['linear'],'C': [0.001]}
+        #
+        # # print("List of grids:\n{}".format(param_grid))
+        # print("Parameter grid:\n{}".format(param_grid))
+        # grid_search = GridSearchCV(SVC(), param_grid, cv=kfold)
+        # X_train, X_test, y_train, y_test = train_test_split(self.extractedData, self.target, random_state=0)
+        # grid_search.fit(X_train, y_train)
+        # y_pred = grid_search.predict(X_test)
+        # print("\n")
+        # print("Test set score: {:.2f}".format(grid_search.score(X_test, y_test)))
+        # print("Best parameters: {}".format(grid_search.best_params_))
+        # print("Best cross-validation score: {:.2f}".format(grid_search.best_score_))
+        # print("\n")
+        # print("Accuracy: {:.3f}".format(accuracy_score(y_test, y_pred)))
+        # print("Confusion matrix:\n{}".format(confusion_matrix(y_test, y_pred)))
+        # print(classification_report(y_test,y_pred))
+        # print("\n")
+        # # convert to DataFrame
+        # results = pd.DataFrame(grid_search.cv_results_)
+        # # show the first 5 rows
+        # print(results.head())
+        #
+        # end = perf_counter()
+        # print("*** GridSearchCV for KNeighborsClassifier \n")
+        #
+        # param_grid = {'n_neighbors': range(1, 20)}
+        # print("Parameter grid:\n{}".format(param_grid))
+        # grid_search = GridSearchCV(KNeighborsClassifier(), param_grid, cv=10)
+        # X_train, X_test, y_train, y_test = train_test_split(self.extractedData, self.target, random_state=0)
+        # grid_search.fit(X_train, y_train)
+        # y_pred = grid_search.predict(X_test)
+        # print("Test set score: {:.2f}".format(grid_search.score(X_test, y_test)))
+        # print("Best parameters: {}".format(grid_search.best_params_))
+        # print("Best cross-validation score: {:.2f}".format(grid_search.best_score_))
+        # print("\n")
+        # print("Accuracy: {:.3f}".format(accuracy_score(y_test, y_pred)))
+        # print("Confusion matrix:\n{}".format(confusion_matrix(y_test, y_pred)))
+        # print(classification_report(y_test,y_pred))
+        # print("\n")
+        # # convert to DataFrame
+        # results = pd.DataFrame(grid_search.cv_results_)
+        # # show the first 5 rows
+        # print(results.head())
 
         # print("Test set predictions:\n {}".format(y_pred))
         # print("Test set score: {:.6f}".format(svm_model_linear.score(X_test, y_test)))
@@ -306,8 +329,8 @@ class Software:
            segments[i] = np.vstack(segment)
        return segments
        
-        
-    def segmentationModule(self, data, frame_size): 
+
+    def segmentationModule(self, data, frame_size, overlap = False):
        #frame_size refers to the number of samples per frame, no overlap
        #frame_size corresponds to the period given for example a sampling rate of 52Hz for particular data set
        
@@ -322,10 +345,16 @@ class Software:
            #indexes
            i = 0
            K = 0
-           
+           overlap_num = 0
            #Count number of valid segments
            while((i + frame_size) < N):
-               
+
+               # start point of overlap
+               x = i + int(frame_size / 2)
+               if (data[x][3] == data[x + frame_size - 1][3]) and (overlap) and (x + frame_size < N):
+                   #increment frame number
+                   K += 1
+
                #if samples in frame consists of the same classifier
                if data[i][3] == data[i + frame_size - 1][3]:
                    #increment frame number
@@ -349,6 +378,7 @@ class Software:
            #indexes
            i = 0
            j = 0
+
            
            #target list, to be converted into a numpy array
            target = []
@@ -356,8 +386,23 @@ class Software:
            #print("#### \n")
            #iterate across each row 
            while((i + frame_size) < N):
-               
+
+               #start point of overlap
+               x = i + int(frame_size / 2)
+               if data[x][3] == data[x + frame_size -1][3] and overlap and x + frame_size < N:
+
+                   # sample frame aka segment consists of only up to the 3rd column
+                   segment = np.vstack(data[x:x + frame_size, :3])
+                   segments[j] = segment
+
+                   # update list of identifiers corresponding to particular sample frame
+                   target.append(data[x][3])
+
+                   # move counter for
+                   j += 1
+
                #if samples in frame consists of the same classifier
+
                if data[i][3] == data[i + frame_size - 1][3]:
                    
                    #sample frame aka segment consists of only up to the 3rd column
@@ -372,6 +417,7 @@ class Software:
                    
                    #move counter for 
                    j += 1
+
                    
                else:
                    i += 1
