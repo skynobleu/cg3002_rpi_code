@@ -2,12 +2,24 @@ import csv as csv
 import numpy as np
 import pandas as pd
 import scipy as sp
+import matplotlib as mpl
 from sklearn import preprocessing
 from time import perf_counter, sleep
-from sklearn.cross_validation import train_test_split, KFold #for splitting training and test data
+from sklearn.preprocessing import LabelEncoder
+from sklearn.model_selection import train_test_split #for splitting training and test data
+from sklearn.svm import SVC # Using Linear SVM Classifier
+from sklearn.neural_network import MLPClassifier #Feedforward Neural Network Algorithm (Multilayer perceptron)
+from sklearn.svm import LinearSVC
+from sklearn.pipeline import Pipeline
+from sklearn.ensemble import GradientBoostingClassifier
+from sklearn.ensemble import RandomForestClassifier
 from sklearn.neighbors import KNeighborsClassifier
+from sklearn.linear_model import LinearRegression
+from sklearn.metrics import mean_squared_error, r2_score
+from sklearn.model_selection import KFold
 from sklearn.metrics import confusion_matrix
-from sklearn.grid_search import GridSearchCV
+from sklearn.model_selection import cross_val_score
+from sklearn.model_selection import GridSearchCV
 from sklearn.metrics import classification_report
 from sklearn.metrics import accuracy_score
 
@@ -186,14 +198,13 @@ class Software:
         #             best_parameters = {'C': C, 'gamma': gamma}
         
         # print("Best score: {:.2f}".format(best_score)) 
-        # print("Best parameters: {}".format(best_parameters))
-
+        # print("Best parameters: {}".format(best_parameters))       
         print("*** GridSearchCV for KNeighborsClassifier \n")
-        # kfold = KFold(n= self.numberOfSegments ,n_folds=10, shuffle=True, random_state=0)
+        kfold = KFold(n_splits=10, shuffle=True, random_state=0)
 
-        param_grid = {'n_neighbors': [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]}
+        param_grid = {'n_neighbors': range(1, 20)}
         print("Parameter grid:\n{}".format(param_grid))
-        grid_search = GridSearchCV(KNeighborsClassifier(), param_grid, cv=10)
+        grid_search = GridSearchCV(KNeighborsClassifier(), param_grid, cv=kfold)
         X_train, X_test, y_train, y_test = train_test_split(self.extractedData, self.target, random_state=0)
         grid_search.fit(X_train, y_train)
         y_pred = grid_search.predict(X_test)
@@ -205,31 +216,105 @@ class Software:
         print("Confusion matrix:\n{}".format(confusion_matrix(y_test, y_pred)))
         print(classification_report(y_test, y_pred))
         print("\n")
-
-        print("#### Grid Scores ###")
-        #print(grid_search.grid_scores_)
-
-        results = grid_search.grid_scores_
-        for i in range(len(results)):
-            print(results[i])
-
-
-
-        # result = np.array(list(grid_search.grid_scores_))
-        # results = pd.DataFrame(result)
-        # print(results)
-
-        #print(grid_search.grid_scores_)
-
-
         # convert to DataFrame
-        #results = pd.DataFrame(grid_search.cv)
+        results = pd.DataFrame(grid_search.cv_results_)
         # show the first 5 rows
-        #print(results.head())
+        print(results.head())
 
 
 
 
+        # print("*** Using Scikit GridSearchCV ***")
+        # # param_grid = [{'kernel': ['rbf'],
+        # #            'C': [0.001, 0.01, 0.1, 1, 10, 100],
+        # #            'gamma': [0.001, 0.01, 0.1, 1, 10, 100]},
+        # #           {'kernel': ['linear'],'C': [0.001, 0.01, 0.1, 1, 10, 100]}]
+        # # param_grid = {'kernel': ['linear'],'C': [0.001, 0.01, 0.1, 1, 10, 100]}
+        # param_grid = {'kernel': ['linear'],'C': [0.001]}
+        #
+        # # print("List of grids:\n{}".format(param_grid))
+        # print("Parameter grid:\n{}".format(param_grid))
+        # grid_search = GridSearchCV(SVC(), param_grid, cv=kfold)
+        # X_train, X_test, y_train, y_test = train_test_split(self.extractedData, self.target, random_state=0)
+        # grid_search.fit(X_train, y_train)
+        # y_pred = grid_search.predict(X_test)
+        # print("\n")
+        # print("Test set score: {:.2f}".format(grid_search.score(X_test, y_test)))
+        # print("Best parameters: {}".format(grid_search.best_params_))
+        # print("Best cross-validation score: {:.2f}".format(grid_search.best_score_))
+        # print("\n")
+        # print("Accuracy: {:.3f}".format(accuracy_score(y_test, y_pred)))
+        # print("Confusion matrix:\n{}".format(confusion_matrix(y_test, y_pred)))
+        # print(classification_report(y_test,y_pred))
+        # print("\n")
+        # # convert to DataFrame
+        # results = pd.DataFrame(grid_search.cv_results_)
+        # # show the first 5 rows
+        # print(results.head())
+        #
+        # end = perf_counter()
+        # print("*** GridSearchCV for KNeighborsClassifier \n")
+        #
+        # param_grid = {'n_neighbors': range(1, 20)}
+        # print("Parameter grid:\n{}".format(param_grid))
+        # grid_search = GridSearchCV(KNeighborsClassifier(), param_grid, cv=10)
+        # X_train, X_test, y_train, y_test = train_test_split(self.extractedData, self.target, random_state=0)
+        # grid_search.fit(X_train, y_train)
+        # y_pred = grid_search.predict(X_test)
+        # print("Test set score: {:.2f}".format(grid_search.score(X_test, y_test)))
+        # print("Best parameters: {}".format(grid_search.best_params_))
+        # print("Best cross-validation score: {:.2f}".format(grid_search.best_score_))
+        # print("\n")
+        # print("Accuracy: {:.3f}".format(accuracy_score(y_test, y_pred)))
+        # print("Confusion matrix:\n{}".format(confusion_matrix(y_test, y_pred)))
+        # print(classification_report(y_test,y_pred))
+        # print("\n")
+        # # convert to DataFrame
+        # results = pd.DataFrame(grid_search.cv_results_)
+        # # show the first 5 rows
+        # print(results.head())
+
+        # print("Test set predictions:\n {}".format(y_pred))
+        # print("Test set score: {:.6f}".format(svm_model_linear.score(X_test, y_test)))
+        
+        # print("Train set score: {:.6f}".format(svm_model_linear.score(X_train, y_train)))
+        # self.benchmark(start, end, "### Linear SVN Prediction Time ###")
+        
+
+        # print("*** Classifier using Linear Regression ***")
+        # lr = LinearRegression()
+        # lr.fit(X_train, y_train)
+        
+        # start = perf_counter()
+        # y_pred = lr.predict(X_test)
+        # end = perf_counter()
+        
+        # # The coefficients
+        # print('Coefficients: \n', lr.coef_)
+        
+        # print("Test set predictions:\n {}".format(y_pred))
+        # print("Mean squared error: %.3f " % mean_squared_error(y_test, y_pred))
+        # # Explained variance score: 1 is perfect prediction
+        # print('Variance score: %.3f ' % r2_score(y_test, y_pred))
+        # print("Test set score: {:.6f}".format(lr.score(X_test, y_test)))
+        
+        # print("Train set score: {:.6f}".format(lr.score(X_train, y_train)))
+        # self.benchmark(start, end, "### Linear Regression Prediction Time ###")
+        
+
+
+        # Multi-layer Perceptron classifier.
+        # print("*** Classifier using MLPC ***")
+        
+        # MLPC = MLPClassifier(solver='lbfgs', random_state=0, hidden_layer_sizes=[10])
+        # MLPC.fit(X_train, y_train)
+        
+        # start = perf_counter()
+        # y_pred = MLPC.predict(X_test)
+        # end = perf_counter()
+        # print("Test set predictions:\n {}".format(y_pred))
+        # print("Test set score: {:.6f}".format(MLPC.score(X_test, y_test)))
+    
     def segment_signal(self, data, window_size): 
         # referenced function meant for inputs
        
