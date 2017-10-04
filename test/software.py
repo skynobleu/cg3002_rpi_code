@@ -2,7 +2,7 @@ import csv as csv
 import numpy as np
 import pandas as pd
 import scipy as sp
-from sklearn import preprocessing
+from sklearn.preprocessing import Imputer, normalize
 from time import perf_counter, sleep
 from sklearn.cross_validation import train_test_split, KFold #for splitting training and test data
 from sklearn.neighbors import KNeighborsClassifier
@@ -10,6 +10,9 @@ from sklearn.metrics import confusion_matrix
 from sklearn.grid_search import GridSearchCV
 from sklearn.metrics import classification_report
 from sklearn.metrics import accuracy_score
+
+
+#https://datascience.stackexchange.com/questions/11928/valueerror-input-contains-nan-infinity-or-a-value-too-large-for-dtypefloat32
 
 class Software:
     
@@ -31,8 +34,23 @@ class Software:
         # consider looping once using default CSV library into numpy array
         
         start = perf_counter()
-        self.rawData = np.genfromtxt(csvName, delimiter=',', usecols= range(1,5), dtype= int)
-        
+        self.rawData = np.genfromtxt(csvName, delimiter=',', usecols= range(0,4), dtype="Float64")
+
+        print("*** CHECK FOR INVALID VALUES READ FROM CSV ***")
+        print(self.rawData.shape)
+        index = 0
+        for i in self.rawData:
+            #print(i)
+            for j in i:
+                if not np.isfinite(j) or np.isnan(j):
+                    print("Invalid Value At: ")
+                    print(index, i)
+                    self.rawData[index] = np.nan_to_num(i)
+                    print("Replaced With: ")
+                    print(index, self.rawData)
+                    print("\n")
+            index += 1
+
         # columns:   0   |    1   |   2    |    3
         # data => accel_x, accel_y, accel_z, identifier
         
@@ -60,11 +78,11 @@ class Software:
         # seg = self.segment_signal(self.rawData, 5) #proves that output signal is a 3 dimensional numpy array
         #print(seg[:10])
         
-        start = perf_counter()
-        self.preprocessingModule(self.segmentedData)
-        end = perf_counter()
-        
-        self.benchmark(start, end, '*** Preprocessing Module ***')
+        # start = perf_counter()
+        # self.preprocessingModule(self.segmentedData)
+        # end = perf_counter()
+        #
+        # self.benchmark(start, end, '*** Preprocessing Module ***')
         
         start = perf_counter()
         self.featureExtractionModule(self.segmentedData)
@@ -74,7 +92,22 @@ class Software:
         self.benchmark(start, end, '*** Feature Extraction Module ***')
         
         # print("size of input: " + str(self.extractedData.shape[0]) + " size of target: "+ str(self.target.shape[0]) + "\n")
-    
+
+        #Determine if ther are any invalid values
+
+        print("***  Rectify Invalid Values in extractedData ***")
+        index = 0
+        for i in self.extractedData:
+            #print(i)
+            for j in i:
+                if not np.isfinite(j) or np.isnan(j):
+                    print("Invalid Value In extractedData At: ")
+                    print(index, i)
+                    self.extractedData[index] = np.nan_to_num(i)
+                    print("Replaced With: ")
+                    print(index, self.extractedData[index])
+                    print("\n")
+            index += 1
         
         X = self.extractedData
         y = self.target
@@ -266,9 +299,12 @@ class Software:
 
                # start point of overlap
                x = i + int(frame_size / 2)
-               if (data[x][3] == data[x + frame_size - 1][3]) and (overlap) and (x + frame_size < N):
-                   #increment frame number
-                   K += 1
+
+               #break if overlap exceeds
+               if(x + frame_size < N):
+                   if (data[x][3] == data[x + frame_size - 1][3]) and (overlap) and (x + frame_size < N):
+                       #increment frame number
+                       K += 1
 
                #if samples in frame consists of the same classifier
                if data[i][3] == data[i + frame_size - 1][3]:
@@ -304,17 +340,19 @@ class Software:
 
                #start point of overlap
                x = i + int(frame_size / 2)
-               if data[x][3] == data[x + frame_size -1][3] and overlap and x + frame_size < N:
 
-                   # sample frame aka segment consists of only up to the 3rd column
-                   segment = np.vstack(data[x:x + frame_size, :3])
-                   segments[j] = segment
+               if (x + frame_size < N):
+                   if data[x][3] == data[x + frame_size -1][3] and overlap and x + frame_size < N:
 
-                   # update list of identifiers corresponding to particular sample frame
-                   target.append(data[x][3])
+                       # sample frame aka segment consists of only up to the 3rd column
+                       segment = np.vstack(data[x:x + frame_size, :3])
+                       segments[j] = segment
 
-                   # move counter for
-                   j += 1
+                       # update list of identifiers corresponding to particular sample frame
+                       target.append(data[x][3])
+
+                       # move counter for
+                       j += 1
 
                #if samples in frame consists of the same classifier
 
@@ -362,9 +400,14 @@ class Software:
            
            #normalize signal data
            #self.norm_data = preprocessing.normalize(self.data[0])
-           
+           # imp = Imputer(missing_values='NaN', strategy='mean', axis=0)
+           # imp.fit(data)
+           #
+           # for i in range(self.numberOfSegments):
+           #     self.processedData[i] = Imputer(data[i])
+
            for i in range(self.numberOfSegments):
-               self.normData[i] = preprocessing.normalize(data[i])
+               self.normData[i] = normalize(data[i])
                
            if self.debug:       
                print("### normalised data set ###")    
@@ -400,13 +443,13 @@ class Software:
            y_sequence = data[i][:, 1]
            z_sequence = data[i][:, 2]
            
-           x_mean = np.mean(x_sequence, dtype=np.float64)
-           y_mean = np.mean(y_sequence, dtype=np.float64)
-           z_mean = np.mean(z_sequence, dtype=np.float64)
+           x_mean = np.mean(x_sequence, dtype='Float64')
+           y_mean = np.mean(y_sequence, dtype='Float64')
+           z_mean = np.mean(z_sequence, dtype='Float64')
            
-           x_std = np.std(x_sequence, dtype=np.float64)
-           y_std = np.std(y_sequence, dtype=np.float64)
-           z_std = np.std(z_sequence, dtype=np.float64)
+           x_std = np.std(x_sequence, dtype='Float64')
+           y_std = np.std(y_sequence, dtype='Float64')
+           z_std = np.std(z_sequence, dtype='Float64')
            
            #obtain only the cov(X, Y) or corr(X, Y) value by the 0th row, 1st column of cov / cor matrix          
            xy_cov = np.cov(x_sequence, y_sequence, ddof=0)[0, 1]
@@ -417,7 +460,7 @@ class Software:
            yz_corr = np.corrcoef(y_sequence, z_sequence)[0, 1]
            zx_corr = np.corrcoef(z_sequence, x_sequence)[0, 1]
            
-           featureData[i] = np.array([x_mean, y_mean, z_mean, x_std, y_std, z_std, xy_cov, yz_cov, zx_cov, xy_corr, yz_corr, zx_corr], dtype=np.float64)
+           featureData[i] = np.array([x_mean, y_mean, z_mean, x_std, y_std, z_std, xy_cov, yz_cov, zx_cov, xy_corr, yz_corr, zx_corr])
 #           print(x_sequence)
 #           print(x_std)
 #           print(xy_cov)
