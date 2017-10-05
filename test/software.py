@@ -2,6 +2,7 @@ import csv as csv
 import numpy as np
 import pandas as pd
 import scipy as sp
+from datetime import datetime
 from sklearn.preprocessing import Imputer, normalize
 from time import perf_counter, sleep
 from sklearn.cross_validation import train_test_split, KFold #for splitting training and test data
@@ -19,7 +20,7 @@ class Software:
     #class variables
     fileID = 0
     
-    def __init__(self, debug = False):
+    def __init__(self, debug = False, outputfile = False):
        Software.fileID += 1
        
        self.debug = debug
@@ -27,6 +28,7 @@ class Software:
        self.segmentedData = None
        self.target = None
        self.extractedData = None
+       self.outputfile = outputfile
     
     
     def inputModule(self, csvName): #used to read in training data
@@ -47,24 +49,10 @@ class Software:
                     print(index, i)
                     self.rawData[index] = np.nan_to_num(i)
                     print("Replaced With: ")
-                    print(index, self.rawData)
+                    print(index, self.rawData[index])
                     print("\n")
             index += 1
 
-        # columns:   0   |    1   |   2    |    3
-        # data => accel_x, accel_y, accel_z, identifier
-        
-        #               identifers
-        #    --- Labels are codified by numbers
-        #    --- 1: Working at Computer
-        #    --- 2: Standing Up, Walking and Going up\down stairs
-        #    --- 3: Standing
-        #    --- 4: Walking
-        #    --- 5: Going Up\Down Stairs
-        #    --- 6: Walking and Talking with Someone
-        #    --- 7: Talking while Standing
-                
-        labels = ['Working at Computer', 'Standing Up, Walking and Going up/down stairs', 'Standing', 'Walking', 'Going Up/Down stairs', 'Walking and Talking with Someone', 'Talking while Standing']
 
         end = perf_counter()
  
@@ -117,13 +105,14 @@ class Software:
         X_train, X_test, y_train, y_test = train_test_split(self.extractedData, self.target, random_state=5)
         end = perf_counter()
         self.benchmark(start, end, '*** Splitting datasets into test and training ***')
-        
+
+        f = open(self.outputfile, 'w')
         # dataset information
+        print('Learning Model Ran At: ' , str(datetime.now()), file=f)
+        print("X_train shape: {}".format(X_train.shape), file=f)
+        print("y_train shape: {}".format(y_train.shape), file=f)
         
-        print("X_train shape: {}".format(X_train.shape)) 
-        print("y_train shape: {}".format(y_train.shape))
-        
-        print("Size of training set: {} size of test set: {}".format(X_train.shape[0], X_test.shape[0]))
+        print("Size of training set: {} size of test set: {}".format(X_train.shape[0], X_test.shape[0]), file=f)
         print("\n")
         
         # print("*** Classifier using KNN ***")
@@ -145,51 +134,6 @@ class Software:
         
         # print('Average classification accuracy is {:.2f}'.format(scores.mean()))
         # end = perf_counter()
-        
-        # print("\n\n\n")
-
-        # print("naive grid search for best parameters (n_neighbors)")
-        # X_train, X_test, y_train, y_test = train_test_split(self.extractedData, self.target, random_state=0)
-        # # split data into train+validation set and test set 
-        # X_trainval, X_test, y_trainval, y_test = train_test_split(iris.data, iris.target, random_state=0)
-        # # split train+validation set into training and validation sets 
-        # X_train, X_valid, y_train, y_valid = train_test_split(X_trainval, y_trainval, random_state=1)
-        # print("Size of training set: {} size of validation set: {} size of test set:"
-        # " {}\n".format(X_train.shape[0], X_valid.shape[0], X_test.shape[0]))
-        # print("Size of training set: {} size of test set: {}".format(X_train.shape[0], X_test.shape[0]))
-        # best_score = 0
-        # for n_neighbors in range(1,11): 
-        #     knn = KNeighborsClassifier(n_neighbors=n_neighbors)
-        #     knn.fit(X_train, y_train)
-        #     score = knn.score(X_test, y_test)
-        #     # if we got a better score, store the score and parameters 
-        #     if score > best_score:
-        #         best_score = score
-        #         best_parameters = n_neighbors
-    
-        # print("Best score: {:.2f}".format(best_score)) 
-        # print("Best parameters: {}".format(best_parameters))      
-
-        
-        # print("Test set predictions:\n {}".format(y_pred))
-        # print("Test set score: {:.6f}".format(knn.score(X_test, y_test)))
-        
-        # print("Train set score: {:.6f}".format(knn.score(X_train, y_train)))
-        # self.benchmark(start, end, "### KNN Prediction Time ###")
-        
-        # print("*** 10 fold cross validation ***")
-        
-        # kfold = KFold(n_splits=10, shuffle=True)
-        # fold_index = 0
-        # for train, test in kfold.split(X):
-        #     model = KNeighborsClassifier(n_neighbors=5).fit(X[train], y[train])
-        #     model_predictions = knn.predict(X[test])
-        #     accuracy = model.score(X[test], y[test])
-        #     cm = confusion_matrix(y[test], model_predictions)
-        #     print('In the %i fold, the classification accuracy is %f' %(fold_index, accuracy))
-        #     print('And the confusion matrix is: ')
-        #     print(cm)
-        #     fold_index += 1 
         print("\n")
 
         
@@ -221,30 +165,30 @@ class Software:
         # print("Best score: {:.2f}".format(best_score)) 
         # print("Best parameters: {}".format(best_parameters))
 
-        print("*** GridSearchCV for KNeighborsClassifier \n")
+        print("*** GridSearchCV for KNeighborsClassifier \n", file=f)
         # kfold = KFold(n= self.numberOfSegments ,n_folds=10, shuffle=True, random_state=0)
 
         param_grid = {'n_neighbors': [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]}
-        print("Parameter grid:\n{}".format(param_grid))
+        print("Parameter grid:\n{}".format(param_grid), file=f)
         grid_search = GridSearchCV(KNeighborsClassifier(), param_grid, cv=10)
         X_train, X_test, y_train, y_test = train_test_split(self.extractedData, self.target, random_state=0)
         grid_search.fit(X_train, y_train)
         y_pred = grid_search.predict(X_test)
-        print("Test set score: {:.2f}".format(grid_search.score(X_test, y_test)))
-        print("Best parameters: {}".format(grid_search.best_params_))
-        print("Best cross-validation score: {:.2f}".format(grid_search.best_score_))
+        print("Test set score: {:.2f}".format(grid_search.score(X_test, y_test)), file = f)
+        print("Best parameters: {}".format(grid_search.best_params_), file = f)
+        print("Best cross-validation score: {:.2f}".format(grid_search.best_score_), file = f)
         print("\n")
-        print("Accuracy: {:.3f}".format(accuracy_score(y_test, y_pred)))
-        print("Confusion matrix:\n{}".format(confusion_matrix(y_test, y_pred)))
-        print(classification_report(y_test, y_pred))
-        print("\n")
+        print("Accuracy: {:.3f}".format(accuracy_score(y_test, y_pred)), file = f)
+        print("Confusion matrix:\n{}".format(confusion_matrix(y_test, y_pred)), file = f)
+        print(classification_report(y_test, y_pred), file= f)
+        print("\n", file=f)
 
-        print("#### Grid Scores ###")
+        print("#### Grid Scores ###", file=f)
         #print(grid_search.grid_scores_)
 
         results = grid_search.grid_scores_
         for i in range(len(results)):
-            print(results[i])
+            print(results[i], file=f)
 
 
 
@@ -479,6 +423,11 @@ class Software:
         else:
             print('\nTime Elapsed: '+ " %.9f seconds" % (end-start) + '\n')
 
+    def save_to_file(self, text):
+
+        with open(self.outputfile, mode='wt', encoding='utf-8') as myfile:
+            myfile.write('\n'.join(text))
+            myfile.write('\n')
    
 
        

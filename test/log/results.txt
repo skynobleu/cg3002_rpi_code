@@ -1,0 +1,51 @@
+Learning Model Ran At:  2017-10-05 18:02:35.825539
+X_train shape: (454, 12)
+y_train shape: (454,)
+Size of training set: 454 size of test set: 152
+*** GridSearchCV for KNeighborsClassifier 
+
+Parameter grid:
+{'n_neighbors': [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]}
+Test set score: 0.82
+Best parameters: {'n_neighbors': 1}
+Best cross-validation score: 0.87
+Accuracy: 0.822
+Confusion matrix:
+[[12  1  0  0  0  0  0  0  0  0]
+ [ 1 12  0  0  0  1  0  0  0  0]
+ [ 0  0  9  0  0  0  1  0  2  0]
+ [ 0  0  0 21  0  0  1  0  1  0]
+ [ 0  0  0  0 17  0  0  0  0  0]
+ [ 0  0  0  0  0 19  1  0  0  0]
+ [ 0  1  1  1  0  0  7  2  1  0]
+ [ 0  0  0  0  0  0  0 16  0  0]
+ [ 3  0  1  1  0  0  0  1 10  1]
+ [ 2  0  0  1  0  0  1  0  1  2]]
+             precision    recall  f1-score   support
+
+        1.0       0.67      0.92      0.77        13
+        2.0       0.86      0.86      0.86        14
+        3.0       0.82      0.75      0.78        12
+        4.0       0.88      0.91      0.89        23
+        5.0       1.00      1.00      1.00        17
+        6.0       0.95      0.95      0.95        20
+        7.0       0.64      0.54      0.58        13
+        8.0       0.84      1.00      0.91        16
+        9.0       0.67      0.59      0.62        17
+       10.0       0.67      0.29      0.40         7
+
+avg / total       0.82      0.82      0.81       152
+
+
+
+#### Grid Scores ###
+mean: 0.87445, std: 0.03611, params: {'n_neighbors': 1}
+mean: 0.85903, std: 0.03433, params: {'n_neighbors': 2}
+mean: 0.83921, std: 0.04279, params: {'n_neighbors': 3}
+mean: 0.85683, std: 0.04253, params: {'n_neighbors': 4}
+mean: 0.84361, std: 0.04370, params: {'n_neighbors': 5}
+mean: 0.84361, std: 0.04503, params: {'n_neighbors': 6}
+mean: 0.83040, std: 0.05366, params: {'n_neighbors': 7}
+mean: 0.82599, std: 0.05222, params: {'n_neighbors': 8}
+mean: 0.82599, std: 0.04949, params: {'n_neighbors': 9}
+mean: 0.81718, std: 0.05439, params: {'n_neighbors': 10}
