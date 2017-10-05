@@ -8,6 +8,8 @@
 .idea/**/tasks.xml
 .idea/dictionaries
 
+**/log
+**/__pycache__
 # Sensitive or high-churn files:
 .idea/**/dataSources/
 .idea/**/dataSources.ids
@@ -41,9 +43,6 @@ out/
 # JIRA plugin
 atlassian-ide-plugin.xml
 
-# User Files
-**/log
-**/__pycache__
 # Cursive Clojure plugin
 .idea/replstate.xml
 

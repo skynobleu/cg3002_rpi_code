@@ -1,4 +1,4 @@
-Learning Model Ran At:  2017-10-05 19:20:37.534953
+Learning Model Ran At:  2017-10-05 19:26:22.922771
 X_train shape: (454, 12)
 y_train shape: (454,)
 Size of training set: 454 size of test set: 152
