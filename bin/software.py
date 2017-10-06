@@ -2,6 +2,7 @@ import csv as csv
 import numpy as np
 import pandas as pd
 import scipy as sp
+import pytz
 from datetime import datetime
 from sklearn.preprocessing import Imputer, normalize
 from time import perf_counter, sleep
@@ -108,7 +109,7 @@ class Software:
 
         f = open(self.outputfile, 'w')
         # dataset information
-        print('Learning Model Ran At: ' , str(datetime.now()), file=f)
+        print('Learning Model Ran At: ' , str(datetime.now(pytz.timezone('Asia/Singapore'))), file=f)
         print("X_train shape: {}".format(X_train.shape), file=f)
         print("y_train shape: {}".format(y_train.shape), file=f)
         
