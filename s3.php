@@ -2,7 +2,7 @@
 
 // Include the SDK using the Composer autoloader
 // date_default_timezone_set('Asia/Singapore');
-require '../vendor/autoloader.php';
+require '/home/pi/vendor/autoload.php';
 use Aws\S3\S3Client;
 use Aws\S3\Exception\S3Exception;
 use Aws\S3\Exception\NoSuchBucketException;
@@ -305,7 +305,7 @@ class s3_handler {
 
 }
 $s3 = new s3_handler();
-#$s3->uploadDirectoryToS3('');
+$s3->uploadDirectoryToS3('bin/log', 'log');
 
 
 
