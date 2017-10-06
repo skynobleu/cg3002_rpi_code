@@ -146,8 +146,8 @@ class s3_handler {
             $result = $this->client->putObject(array(
                 'Bucket' => $this->bucket,
                 'Key' => $filename,
-                'SourceFile' => $pathToFile,
-
+		'SourceFile' => $pathToFile,
+		'ACL' => 'public-read'
             ));
 
             $this->client->waitUntil('ObjectExists', array(
