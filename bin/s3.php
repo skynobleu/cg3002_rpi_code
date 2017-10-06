@@ -305,7 +305,7 @@ class s3_handler {
 
 }
 $s3 = new s3_handler();
-$s3->uploadDirectoryToS3('bin/log', 'log');
+$s3->uploadDirectoryToS3('log', 'log');
 
 
 
