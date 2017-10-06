@@ -59,7 +59,7 @@ class Software:
         self.benchmark(start, end, '*** Read From CSV ***')
         
         start = perf_counter()
-        self.segmentationModule(self.rawData, 120, True)
+        self.segmentationModule(self.rawData, 150, True)
         end = perf_counter()
         
         self.benchmark(start, end, '*** Segmentation Module ***')
