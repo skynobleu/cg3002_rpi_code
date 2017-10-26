@@ -195,12 +195,12 @@ class Software:
 
                #break if overlap exceeds
                if(x + frame_size < N):
-                   if (data[x][3] == data[x + frame_size - 1][3]) and (overlap) and (x + frame_size < N):
+                   if (data[x][6] == data[x + frame_size - 1][6]) and (overlap) and (x + frame_size < N):
                        #increment frame number
                        K += 1
 
                #if samples in frame consists of the same classifier
-               if data[i][3] == data[i + frame_size - 1][3]:
+               if data[i][6] == data[i + frame_size - 1][6]:
                    #increment frame number
                    K += 1
                    
@@ -235,28 +235,28 @@ class Software:
                x = i + int(frame_size / 2)
 
                if (x + frame_size < N):
-                   if data[x][3] == data[x + frame_size -1][3] and overlap and x + frame_size < N:
+                   if data[x][6] == data[x + frame_size -1][6] and overlap and x + frame_size < N:
 
-                       # sample frame aka segment consists of only up to the 3rd column
-                       segment = np.vstack(data[x:x + frame_size, :3])
+                       # sample frame aka segment consists of only up to the 6th column
+                       segment = np.vstack(data[x:x + frame_size, :6])
                        segments[j] = segment
 
                        # update list of identifiers corresponding to particular sample frame
-                       target.append(data[x][3])
+                       target.append(data[x][6])
 
                        # move counter for
                        j += 1
 
                #if samples in frame consists of the same classifier
 
-               if data[i][3] == data[i + frame_size - 1][3]:
+               if data[i][6] == data[i + frame_size - 1][6]:
                    
                    #sample frame aka segment consists of only up to the 3rd column
-                   segment = np.vstack(data[i:i + frame_size, :3])
+                   segment = np.vstack(data[i:i + frame_size, :6])
                    segments[j] = segment
                    
                    #update list of identifiers corresponding to particular sample frame
-                   target.append(data[i][3])
+                   target.append(data[i][6])
                    
                    #move to next frame
                    i += frame_size
@@ -311,7 +311,7 @@ class Software:
 
     def extractFeaturesTrain(self, data):
         # 24 features will be selected from each accelerometer readings
-        featureData = np.empty((self.sampleSize, 24))
+        featureData = np.empty((self.numberOfSegments, 24))
 
         # to use the data for classification, we need to convert the data set into a 2D NumPy array
 
@@ -326,7 +326,7 @@ class Software:
 
         # Correlation
         # 10. Correlation X, Y   11. Correlation Y, Z    12. Correlation Z, X
-        for i in range(self.sampleSize):
+        for i in range(self.numberOfSegments):
             # obtain only the first column => accel_x values and etc for accel_y and accel_z
             x_sequence = data[i][:, 0]
             y_sequence = data[i][:, 1]
@@ -385,7 +385,7 @@ class Software:
 
     def extractFeaturesPredict(self, data):
         # 24 features will be selected from each accelerometer readings
-        featureData = np.empty((self.sampleSize, 24))
+        featureData = np.empty((1, 24))
 
         # to use the data for classification, we need to convert the data set into a 2D NumPy array
 
@@ -400,7 +400,7 @@ class Software:
 
         # Correlation
         # 10. Correlation X, Y   11. Correlation Y, Z    12. Correlation Z, X
-        for i in range(self.sampleSize):
+        for i in range(1):
             # obtain only the first column => accel_x values and etc for accel_y and accel_z
             x_sequence = data[i][:, 0]
             y_sequence = data[i][:, 1]
