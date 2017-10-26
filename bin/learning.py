@@ -12,7 +12,7 @@ from sklearn.metrics import confusion_matrix
 from sklearn.grid_search import GridSearchCV
 from sklearn.metrics import classification_report
 from sklearn.metrics import accuracy_score
-
+import random
 
 #https://datascience.stackexchange.com/questions/11928/valueerror-input-contains-nan-infinity-or-a-value-too-large-for-dtypefloat32
 
@@ -20,6 +20,7 @@ class Software:
     
     #class variables
     fileID = 0
+    labels = {0: "Standing",1: "Wave Hands", 2: "Bus Driver", 3: "Front Back", 4: "Sidestep", 5: "Jumping" }
     
     def __init__(self, sampleSize, debug = False, outputfile = False):
        
@@ -30,7 +31,9 @@ class Software:
        self.extractedData = None
        self.outputfile = outputfile
        self.sampleSize = sampleSize
-    
+       self.classifier = None
+
+
     
     def inputModule(self, csvName): #used to read in training data
         # read CSV Data into a numpy array
@@ -100,8 +103,15 @@ class Software:
                     print("\n")
             index += 1
         
-        X = self.extractedData
-        y = self.target
+        X = self.extractedData[:int(self.numberOfSegments/2)]
+        y = self.target[:int(self.numberOfSegments/2)]
+        #train classifier
+        self.classifier = KNeighborsClassifier(n_neighbors=7)
+        self.classifier.fit(X, y)
+
+        #test classifier
+
+        self.predictDanceMoveTest()
 
         # Split dataset into test data and training data
         start = perf_counter()
@@ -406,77 +416,118 @@ class Software:
 
         # Correlation
         # 10. Correlation X, Y   11. Correlation Y, Z    12. Correlation Z, X
-        for i in range(1):
-            # obtain only the first column => accel_x values and etc for accel_y and accel_z
-            x_sequence = data[i][:, 0]
-            y_sequence = data[i][:, 1]
-            z_sequence = data[i][:, 2]
 
-            a_sequence = data[i][:, 3]
-            b_sequence = data[i][:, 4]
-            c_sequence = data[i][:, 5]
+        # obtain only the first column => accel_x values and etc for accel_y and accel_z
+        x_sequence = data[:, 0]
+        y_sequence = data[:, 1]
+        z_sequence = data[:, 2]
 
-            x_mean = np.mean(x_sequence, dtype='Int32')
-            y_mean = np.mean(y_sequence, dtype='Int32')
-            z_mean = np.mean(z_sequence, dtype='Int32')
+        a_sequence = data[:, 3]
+        b_sequence = data[:, 4]
+        c_sequence = data[:, 5]
 
-            a_mean = np.mean(a_sequence, dtype='Int32')
-            b_mean = np.mean(b_sequence, dtype='Int32')
-            c_mean = np.mean(c_sequence, dtype='Int32')
+        x_mean = np.mean(x_sequence, dtype='Int32')
+        y_mean = np.mean(y_sequence, dtype='Int32')
+        z_mean = np.mean(z_sequence, dtype='Int32')
 
-            x_std = np.std(x_sequence, dtype='Int32')
-            y_std = np.std(y_sequence, dtype='Int32')
-            z_std = np.std(z_sequence, dtype='Int32')
+        a_mean = np.mean(a_sequence, dtype='Int32')
+        b_mean = np.mean(b_sequence, dtype='Int32')
+        c_mean = np.mean(c_sequence, dtype='Int32')
 
-            a_std = np.std(a_sequence, dtype='Int32')
-            b_std = np.std(b_sequence, dtype='Int32')
-            c_std = np.std(c_sequence, dtype='Int32')
+        x_std = np.std(x_sequence, dtype='Int32')
+        y_std = np.std(y_sequence, dtype='Int32')
+        z_std = np.std(z_sequence, dtype='Int32')
 
-            # obtain only the cov(X, Y) or corr(X, Y) value by the 0th row, 1st column of cov / cor matrix
-            xy_cov = np.cov(x_sequence, y_sequence, ddof=0)[0, 1]
-            yz_cov = np.cov(y_sequence, z_sequence, ddof=0)[0, 1]
-            zx_cov = np.cov(z_sequence, x_sequence, ddof=0)[0, 1]
+        a_std = np.std(a_sequence, dtype='Int32')
+        b_std = np.std(b_sequence, dtype='Int32')
+        c_std = np.std(c_sequence, dtype='Int32')
 
-            ab_cov = np.cov(a_sequence, b_sequence, ddof=0)[0, 1]
-            bc_cov = np.cov(b_sequence, c_sequence, ddof=0)[0, 1]
-            ca_cov = np.cov(c_sequence, a_sequence, ddof=0)[0, 1]
+        # obtain only the cov(X, Y) or corr(X, Y) value by the 0th row, 1st column of cov / cor matrix
+        xy_cov = np.cov(x_sequence, y_sequence, ddof=0)[0, 1]
+        yz_cov = np.cov(y_sequence, z_sequence, ddof=0)[0, 1]
+        zx_cov = np.cov(z_sequence, x_sequence, ddof=0)[0, 1]
 
-            xy_corr = np.corrcoef(x_sequence, y_sequence)[0, 1]
-            yz_corr = np.corrcoef(y_sequence, z_sequence)[0, 1]
-            zx_corr = np.corrcoef(z_sequence, x_sequence)[0, 1]
+        ab_cov = np.cov(a_sequence, b_sequence, ddof=0)[0, 1]
+        bc_cov = np.cov(b_sequence, c_sequence, ddof=0)[0, 1]
+        ca_cov = np.cov(c_sequence, a_sequence, ddof=0)[0, 1]
 
-            ab_corr = np.corrcoef(a_sequence, b_sequence)[0, 1]
-            bc_corr = np.corrcoef(b_sequence, c_sequence)[0, 1]
-            ca_corr = np.corrcoef(c_sequence, a_sequence)[0, 1]
+        xy_corr = np.corrcoef(x_sequence, y_sequence)[0, 1]
+        yz_corr = np.corrcoef(y_sequence, z_sequence)[0, 1]
+        zx_corr = np.corrcoef(z_sequence, x_sequence)[0, 1]
 
-            featureData[i] = np.array(
-                [x_mean, y_mean, z_mean, x_std, y_std, z_std, xy_cov, yz_cov, zx_cov, xy_corr, yz_corr, zx_corr, a_mean,
-                 b_mean, c_mean, a_std, b_std, c_std, ab_cov, bc_cov, ca_cov, ab_corr, bc_corr, ca_corr])
+        ab_corr = np.corrcoef(a_sequence, b_sequence)[0, 1]
+        bc_corr = np.corrcoef(b_sequence, c_sequence)[0, 1]
+        ca_corr = np.corrcoef(c_sequence, a_sequence)[0, 1]
+
+        featureData = np.array(
+            [x_mean, y_mean, z_mean, x_std, y_std, z_std, xy_cov, yz_cov, zx_cov, xy_corr, yz_corr, zx_corr, a_mean,
+             b_mean, c_mean, a_std, b_std, c_std, ab_cov, bc_cov, ca_cov, ab_corr, bc_corr, ca_corr])
 
         #correct data to fix incorrect values
 
         index = 0
-        for i in featureData:
+        for j in featureData:
             # print(i)
-            for j in i:
-                if not np.isfinite(j) or np.isnan(j):
-                    print("Invalid Value In extractedData At: ")
-                    print(index, i)
-                    featureData[index] = np.nan_to_num(i)
-                    print("Replaced With: ")
-                    print(index, featureData[index])
-                    print("\n")
+            if not np.isfinite(j) or np.isnan(j):
+                print("Invalid Value In extractedData At: ")
+                print(j)
+                print(featureData)
+                featureData = np.nan_to_num(featureData)
+                print("Replaced With: ")
+                print(featureData)
+                print("\n")
             index += 1
 
         return featureData
 
     def predictDanceMove(self, signal):
-        rawSignal = np.asarray(signal)
+        try:
+            rawSignal = np.asarray(signal)
+            processedSignal = self.extractFeaturesPredict(rawSignal)
+            prediction_result = self.classifier.predict(processedSignal)
+
+            return Software.labels[prediction_result[0]]
+        except:
+            return "Error"
+
+
+    def predictDanceMoveTest(self):
+
+        print("############### Test Prediction ###############")
+        index = random.randrange(int(self.numberOfSegments/2), self.numberOfSegments)
+        print("index: ", index)
+
+        test_signal = self.segmentedData[index].tolist()
+
+        print("test_signal: ")
+        print(test_signal)
+
+        print("actual activity: ")
+        actual = self.target[index]
+        print(actual)
+        print(Software.labels[actual])
+        rawSignal = np.asarray(test_signal)
+        #rawSignal = np.asarray(signal)
+
+
         processedSignal = self.extractFeaturesPredict(rawSignal)
+        print("processed_signal: ")
+        print(processedSignal)
+        # prediction portion
 
+        prediction_result = self.classifier.predict(processedSignal)
+        print("predicted activity: ")
+        print(prediction_result[0])
+        print(type(prediction_result[0]) )
+        print(Software.labels[prediction_result[0]])
+
+        if(prediction_result == actual):
+            print("Predicted Correctly")
+
+        else:
+            print("Incorrect Prediction")
         #prediction portion
-
-        return
+        return Software.labels[prediction_result[0]]
 
 
     def benchmark(self, start, end, message = False): #used to determine performance of algorithm

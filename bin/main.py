@@ -1,7 +1,7 @@
 from learning import Software
 # from new_serial import Serial
 # from client import Client
-s = Software(60, True, 'log/results.txt')
+s = Software(100, True, 'log/results.txt')
 
 #s.inputModule('train/1wavehands1.csv')
 s.inputModule('train/merged.csv')
