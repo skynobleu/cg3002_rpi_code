@@ -12,6 +12,7 @@ from sklearn.metrics import confusion_matrix
 from sklearn.grid_search import GridSearchCV
 from sklearn.metrics import classification_report
 from sklearn.metrics import accuracy_score
+from sklearn.externals import joblib
 import random
 
 #https://datascience.stackexchange.com/questions/11928/valueerror-input-contains-nan-infinity-or-a-value-too-large-for-dtypefloat32
@@ -103,11 +104,26 @@ class Software:
                     print("\n")
             index += 1
         
-        X = self.extractedData[:int(self.numberOfSegments/2)]
-        y = self.target[:int(self.numberOfSegments/2)]
+        X = self.extractedData
+        y = self.target
+
+        X_train, X_test, y_train, y_test = train_test_split(X, y, random_state=1)
+
         #train classifier
         self.classifier = KNeighborsClassifier(n_neighbors=7)
-        self.classifier.fit(X, y)
+        self.classifier.fit(X_train, y_train)
+
+        print("####### Persistence test: ########")
+        print("Original Accuracy:")
+        print(self.classifier.score(X_test, y_test))
+        filename = 'models/KNN.sav'
+        joblib.dump(self.classifier, filename)
+        #self.classifier= joblib.load(filename)
+        loaded_model = joblib.load(filename)
+        result = loaded_model.score(X_test, y_test)
+        print("loaded model accuracy: ")
+        print(result)
+        return
 
         #test classifier
 
