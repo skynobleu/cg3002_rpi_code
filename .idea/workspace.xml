@@ -2,7 +2,6 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="05450bc9-a0da-42f5-b05d-053eb78d1565" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/bin/learning.py" afterPath="$PROJECT_DIR$/bin/learning.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/bin/main.py" afterPath="$PROJECT_DIR$/bin/main.py" />
     </list>
@@ -28,7 +27,7 @@
       <file leaf-file-name="software.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/bin/software.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-1552">
+            <state relative-caret-position="1303">
               <caret line="160" column="14" lean-forward="false" selection-start-line="160" selection-start-column="14" selection-end-line="160" selection-end-column="14" />
               <folding>
                 <element signature="e#0#17#0" expanded="true" />
@@ -40,9 +39,11 @@
       <file leaf-file-name="learning.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/bin/learning.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="257">
-              <caret line="247" column="48" lean-forward="true" selection-start-line="247" selection-start-column="48" selection-end-line="247" selection-end-column="48" />
-              <folding />
+            <state relative-caret-position="1539">
+              <caret line="491" column="0" lean-forward="true" selection-start-line="491" selection-start-column="0" selection-end-line="491" selection-end-column="0" />
+              <folding>
+                <element signature="e#0#17#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -50,8 +51,8 @@
       <file leaf-file-name="main.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/bin/main.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="75">
-              <caret line="5" column="39" lean-forward="true" selection-start-line="5" selection-start-column="39" selection-end-line="5" selection-end-column="39" />
+            <state relative-caret-position="90">
+              <caret line="6" column="33" lean-forward="true" selection-start-line="6" selection-start-column="33" selection-end-line="6" selection-end-column="33" />
               <folding />
             </state>
           </provider>
@@ -66,6 +67,7 @@
       <find>cv_re</find>
       <find>\n</find>
       <find>preproc</find>
+      <find>classifier</find>
     </findStrings>
     <replaceStrings>
       <replace>Int64</replace>
@@ -133,12 +135,6 @@
               <item name="bin" type="462c0819:PsiDirectoryNode" />
               <item name="datasets" type="462c0819:PsiDirectoryNode" />
             </path>
-            <path>
-              <item name="mlearning" type="b2602c69:ProjectViewProjectNode" />
-              <item name="mlearning" type="462c0819:PsiDirectoryNode" />
-              <item name="bin" type="462c0819:PsiDirectoryNode" />
-              <item name="train" type="462c0819:PsiDirectoryNode" />
-            </path>
           </expand>
           <select />
         </subPane>
@@ -152,12 +148,12 @@
     <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
   </component>
   <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/test" />
+    </key>
     <key name="CopyFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/bin" />
       <recent name="$PROJECT_DIR$/test/datasets" />
-      <recent name="$PROJECT_DIR$/test" />
-    </key>
-    <key name="MoveFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/test" />
     </key>
   </component>
@@ -269,7 +265,9 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="6810">
           <caret line="467" column="38" lean-forward="true" selection-start-line="467" selection-start-column="38" selection-end-line="467" selection-end-column="38" />
-          <folding />
+          <folding>
+            <element signature="e#0#17#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -393,7 +391,7 @@
     <entry file="file://$PROJECT_DIR$/client.py" />
     <entry file="file://$PROJECT_DIR$/bin/software.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-1552">
+        <state relative-caret-position="1303">
           <caret line="160" column="14" lean-forward="false" selection-start-line="160" selection-start-column="14" selection-end-line="160" selection-end-column="14" />
           <folding>
             <element signature="e#0#17#0" expanded="true" />
@@ -403,16 +401,18 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/bin/learning.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="257">
-          <caret line="247" column="48" lean-forward="true" selection-start-line="247" selection-start-column="48" selection-end-line="247" selection-end-column="48" />
-          <folding />
+        <state relative-caret-position="1539">
+          <caret line="491" column="0" lean-forward="true" selection-start-line="491" selection-start-column="0" selection-end-line="491" selection-end-column="0" />
+          <folding>
+            <element signature="e#0#17#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/bin/main.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="75">
-          <caret line="5" column="39" lean-forward="true" selection-start-line="5" selection-start-column="39" selection-end-line="5" selection-end-column="39" />
+        <state relative-caret-position="90">
+          <caret line="6" column="33" lean-forward="true" selection-start-line="6" selection-start-column="33" selection-end-line="6" selection-end-column="33" />
           <folding />
         </state>
       </provider>
