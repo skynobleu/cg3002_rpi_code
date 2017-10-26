@@ -21,8 +21,7 @@ class Software:
     #class variables
     fileID = 0
     
-    def __init__(self, debug = False, outputfile = False):
-       Software.fileID += 1
+    def __init__(self, sampleSize, debug = False, outputfile = False):
        
        self.debug = debug
        self.rawData = None
@@ -30,6 +29,7 @@ class Software:
        self.target = None
        self.extractedData = None
        self.outputfile = outputfile
+       self.sampleSize = sampleSize
     
     
     def inputModule(self, csvName): #used to read in training data
@@ -37,7 +37,7 @@ class Software:
         # consider looping once using default CSV library into numpy array
         
         start = perf_counter()
-        self.rawData = np.genfromtxt(csvName, delimiter=',', usecols= range(0,4), dtype="Float64")
+        self.rawData = np.genfromtxt(csvName, delimiter=',', usecols= range(0,7), dtype="Int64")
 
         print("*** CHECK FOR INVALID VALUES READ FROM CSV ***")
         print(self.rawData.shape)
@@ -60,7 +60,7 @@ class Software:
         self.benchmark(start, end, '*** Read From CSV ***')
         
         start = perf_counter()
-        self.segmentationModule(self.rawData, 150, True)
+        self.segmentationModule(self.rawData, self.sampleSize, True)
         end = perf_counter()
         
         self.benchmark(start, end, '*** Segmentation Module ***')
@@ -74,7 +74,7 @@ class Software:
         # self.benchmark(start, end, '*** Preprocessing Module ***')
         
         start = perf_counter()
-        self.featureExtractionModule(self.segmentedData)
+        self.extractFeaturesTrain(self.segmentedData)
         #self.featureExtractionModule(self.normData)
         end = perf_counter()
         
@@ -115,56 +115,6 @@ class Software:
         
         print("Size of training set: {} size of test set: {}".format(X_train.shape[0], X_test.shape[0]), file=f)
         print("\n")
-        
-        # print("*** Classifier using KNN ***")
-        # #build model on knn classifier
-        
-        
-        # # knn = KNeighborsClassifier(n_neighbors=5)
-        # # knn.fit(X_train, y_train)
-        # # print(knn)
-       
-        # start = perf_counter()
-        # # y_pred = knn.predict(X_test)
-        # kfold = KFold(n_splits=10, shuffle=True, random_state=0)
-        # classifier = KNeighborsClassifier(n_neighbors=5)
-        # scores = cross_val_score(classifier, self.extractedData, self.target, cv=kfold)
-
-        # for fold_index in range(10):
-        #     print('In the %i fold, the classification accuracy is %f' %(fold_index+1, scores[fold_index]))
-        
-        # print('Average classification accuracy is {:.2f}'.format(scores.mean()))
-        # end = perf_counter()
-        print("\n")
-
-        
-        # svm_model_linear = SVC(kernel = 'linear', C = 1).fit(X_train, y_train)
-        
-        start = perf_counter()
-        # y_pred = svm_model_linear.predict(X_test)
-        
-        
-        
-        # end = perf_counter()
-        
-        # print("naive grid search for best parameters (gamma, C)")
-        # X_train, X_test, y_train, y_test = train_test_split(self.extractedData, self.target, random_state=0)
-        # print("Size of training set: {} size of test set: {}".format(X_train.shape[0], X_test.shape[0]))
-        # best_score = 0
-        # for gamma in [0.001, 0.01, 0.1, 1, 10, 100]: 
-        #     for C in [0.001, 0.01, 0.1, 1, 10, 100]:
-        #         # for each combination of parameters, train an SVC
-        #         svm = SVC(gamma=gamma, C=C)
-        #         svm.fit(X_train, y_train)
-        #         # evaluate the SVC on the test set
-        #         score = svm.score(X_test, y_test)
-        #         # if we got a better score, store the score and parameters 
-        #         if score > best_score:
-        #             best_score = score
-        #             best_parameters = {'C': C, 'gamma': gamma}
-        
-        # print("Best score: {:.2f}".format(best_score)) 
-        # print("Best parameters: {}".format(best_parameters))
 
         print("*** GridSearchCV for KNeighborsClassifier \n", file=f)
         # kfold = KFold(n= self.numberOfSegments ,n_folds=10, shuffle=True, random_state=0)
@@ -204,8 +154,6 @@ class Software:
         #results = pd.DataFrame(grid_search.cv)
         # show the first 5 rows
         #print(results.head())
-
-
 
 
     def segment_signal(self, data, window_size): 
@@ -360,64 +308,171 @@ class Software:
            
        else:
            print('data not ready for preprocessing')
-           
-    def featureExtractionModule(self, data):
-       
-       
-       
-       # 12 features will be selected from the accelerometer readings
-       featureData = np.empty((self.numberOfSegments, 12))
-       
-       # to use the data for classification, we need to convert the data set into a 2D NumPy array 
-       
-       #Averages
-       #1. Average X    2. Average Y   3. Average Z
-       
-       #Standard Deviations
-       #4. Standard deviation X 5. Standard deviation Y 6. Standard deviation Z
-       
-       #Covariance
-       #7. Covariance X, Y    8. Covariance Y, Z    9. Covariance Z, X
-       
-       #Correlation
-       #10. Correlation X, Y   11. Correlation Y, Z    12. Correlation Z, X
-       for i in range(self.numberOfSegments):
-           
-           #obtain only the first column => accel_x values and etc for accel_y and accel_z
-           x_sequence = data[i][:, 0]
-           y_sequence = data[i][:, 1]
-           z_sequence = data[i][:, 2]
-           
-           x_mean = np.mean(x_sequence, dtype='Float64')
-           y_mean = np.mean(y_sequence, dtype='Float64')
-           z_mean = np.mean(z_sequence, dtype='Float64')
-           
-           x_std = np.std(x_sequence, dtype='Float64')
-           y_std = np.std(y_sequence, dtype='Float64')
-           z_std = np.std(z_sequence, dtype='Float64')
-           
-           #obtain only the cov(X, Y) or corr(X, Y) value by the 0th row, 1st column of cov / cor matrix          
-           xy_cov = np.cov(x_sequence, y_sequence, ddof=0)[0, 1]
-           yz_cov = np.cov(y_sequence, z_sequence, ddof=0)[0, 1]
-           zx_cov = np.cov(z_sequence, x_sequence, ddof=0)[0, 1]
-           
-           xy_corr = np.corrcoef(x_sequence, y_sequence)[0, 1]
-           yz_corr = np.corrcoef(y_sequence, z_sequence)[0, 1]
-           zx_corr = np.corrcoef(z_sequence, x_sequence)[0, 1]
-           
-           featureData[i] = np.array([x_mean, y_mean, z_mean, x_std, y_std, z_std, xy_cov, yz_cov, zx_cov, xy_corr, yz_corr, zx_corr])
-#           print(x_sequence)
-#           print(x_std)
-#           print(xy_cov)
-#           print(xy_corr)
-#           print(featureData[i])
-#           break
-    
-       self.extractedData = featureData
-       if self.debug:
-           print(featureData[:3])
-    
-    
+
+    def extractFeaturesTrain(self, data):
+        # 24 features will be selected from each accelerometer readings
+        featureData = np.empty((self.sampleSize, 24))
+
+        # to use the data for classification, we need to convert the data set into a 2D NumPy array
+
+        # Averages
+        # 1. Average X    2. Average Y   3. Average Z
+
+        # Standard Deviations
+        # 4. Standard deviation X 5. Standard deviation Y 6. Standard deviation Z
+
+        # Covariance
+        # 7. Covariance X, Y    8. Covariance Y, Z    9. Covariance Z, X
+
+        # Correlation
+        # 10. Correlation X, Y   11. Correlation Y, Z    12. Correlation Z, X
+        for i in range(self.sampleSize):
+            # obtain only the first column => accel_x values and etc for accel_y and accel_z
+            x_sequence = data[i][:, 0]
+            y_sequence = data[i][:, 1]
+            z_sequence = data[i][:, 2]
+
+            a_sequence = data[i][:, 3]
+            b_sequence = data[i][:, 4]
+            c_sequence = data[i][:, 5]
+
+            x_mean = np.mean(x_sequence, dtype='Int64')
+            y_mean = np.mean(y_sequence, dtype='Int64')
+            z_mean = np.mean(z_sequence, dtype='Int64')
+
+            a_mean = np.mean(a_sequence, dtype='Int64')
+            b_mean = np.mean(b_sequence, dtype='Int64')
+            c_mean = np.mean(c_sequence, dtype='Int64')
+
+            x_std = np.std(x_sequence, dtype='Int64')
+            y_std = np.std(y_sequence, dtype='Int64')
+            z_std = np.std(z_sequence, dtype='Int64')
+
+            a_std = np.std(a_sequence, dtype='Int64')
+            b_std = np.std(b_sequence, dtype='Int64')
+            c_std = np.std(c_sequence, dtype='Int64')
+
+            # obtain only the cov(X, Y) or corr(X, Y) value by the 0th row, 1st column of cov / cor matrix
+            xy_cov = np.cov(x_sequence, y_sequence, ddof=0)[0, 1]
+            yz_cov = np.cov(y_sequence, z_sequence, ddof=0)[0, 1]
+            zx_cov = np.cov(z_sequence, x_sequence, ddof=0)[0, 1]
+
+            ab_cov = np.cov(a_sequence, b_sequence, ddof=0)[0, 1]
+            bc_cov = np.cov(b_sequence, c_sequence, ddof=0)[0, 1]
+            ca_cov = np.cov(c_sequence, a_sequence, ddof=0)[0, 1]
+
+            xy_corr = np.corrcoef(x_sequence, y_sequence)[0, 1]
+            yz_corr = np.corrcoef(y_sequence, z_sequence)[0, 1]
+            zx_corr = np.corrcoef(z_sequence, x_sequence)[0, 1]
+
+            ab_corr = np.corrcoef(a_sequence, b_sequence)[0, 1]
+            bc_corr = np.corrcoef(b_sequence, c_sequence)[0, 1]
+            ca_corr = np.corrcoef(c_sequence, a_sequence)[0, 1]
+
+            featureData[i] = np.array(
+                [x_mean, y_mean, z_mean, x_std, y_std, z_std, xy_cov, yz_cov, zx_cov, xy_corr, yz_corr, zx_corr, a_mean, b_mean, c_mean, a_std, b_std, c_std, ab_cov, bc_cov, ca_cov, ab_corr, bc_corr, ca_corr])
+
+            #           print(x_sequence)
+            #           print(x_std)
+            #           print(xy_cov)
+            #           print(xy_corr)
+            #           print(featureData[i])
+            #           break
+
+        self.extractedData = featureData
+        if self.debug:
+            print(featureData[:3])
+
+    def extractFeaturesPredict(self, data):
+        # 24 features will be selected from each accelerometer readings
+        featureData = np.empty((self.sampleSize, 24))
+
+        # to use the data for classification, we need to convert the data set into a 2D NumPy array
+
+        # Averages
+        # 1. Average X    2. Average Y   3. Average Z
+
+        # Standard Deviations
+        # 4. Standard deviation X 5. Standard deviation Y 6. Standard deviation Z
+
+        # Covariance
+        # 7. Covariance X, Y    8. Covariance Y, Z    9. Covariance Z, X
+
+        # Correlation
+        # 10. Correlation X, Y   11. Correlation Y, Z    12. Correlation Z, X
+        for i in range(self.sampleSize):
+            # obtain only the first column => accel_x values and etc for accel_y and accel_z
+            x_sequence = data[i][:, 0]
+            y_sequence = data[i][:, 1]
+            z_sequence = data[i][:, 2]
+
+            a_sequence = data[i][:, 3]
+            b_sequence = data[i][:, 4]
+            c_sequence = data[i][:, 5]
+
+            x_mean = np.mean(x_sequence, dtype='Int64')
+            y_mean = np.mean(y_sequence, dtype='Int64')
+            z_mean = np.mean(z_sequence, dtype='Int64')
+
+            a_mean = np.mean(a_sequence, dtype='Int64')
+            b_mean = np.mean(b_sequence, dtype='Int64')
+            c_mean = np.mean(c_sequence, dtype='Int64')
+
+            x_std = np.std(x_sequence, dtype='Int64')
+            y_std = np.std(y_sequence, dtype='Int64')
+            z_std = np.std(z_sequence, dtype='Int64')
+
+            a_std = np.std(a_sequence, dtype='Int64')
+            b_std = np.std(b_sequence, dtype='Int64')
+            c_std = np.std(c_sequence, dtype='Int64')
+
+            # obtain only the cov(X, Y) or corr(X, Y) value by the 0th row, 1st column of cov / cor matrix
+            xy_cov = np.cov(x_sequence, y_sequence, ddof=0)[0, 1]
+            yz_cov = np.cov(y_sequence, z_sequence, ddof=0)[0, 1]
+            zx_cov = np.cov(z_sequence, x_sequence, ddof=0)[0, 1]
+
+            ab_cov = np.cov(a_sequence, b_sequence, ddof=0)[0, 1]
+            bc_cov = np.cov(b_sequence, c_sequence, ddof=0)[0, 1]
+            ca_cov = np.cov(c_sequence, a_sequence, ddof=0)[0, 1]
+
+            xy_corr = np.corrcoef(x_sequence, y_sequence)[0, 1]
+            yz_corr = np.corrcoef(y_sequence, z_sequence)[0, 1]
+            zx_corr = np.corrcoef(z_sequence, x_sequence)[0, 1]
+
+            ab_corr = np.corrcoef(a_sequence, b_sequence)[0, 1]
+            bc_corr = np.corrcoef(b_sequence, c_sequence)[0, 1]
+            ca_corr = np.corrcoef(c_sequence, a_sequence)[0, 1]
+
+            featureData[i] = np.array(
+                [x_mean, y_mean, z_mean, x_std, y_std, z_std, xy_cov, yz_cov, zx_cov, xy_corr, yz_corr, zx_corr, a_mean,
+                 b_mean, c_mean, a_std, b_std, c_std, ab_cov, bc_cov, ca_cov, ab_corr, bc_corr, ca_corr])
+
+        #correct data to fix incorrect values
+
+        index = 0
+        for i in featureData:
+            # print(i)
+            for j in i:
+                if not np.isfinite(j) or np.isnan(j):
+                    print("Invalid Value In extractedData At: ")
+                    print(index, i)
+                    featureData[index] = np.nan_to_num(i)
+                    print("Replaced With: ")
+                    print(index, featureData[index])
+                    print("\n")
+            index += 1
+
+        return featureData
+
+    def predictDanceMove(self, signal):
+        rawSignal = np.asarray(signal)
+        processedSignal = self.extractFeaturesPredict(rawSignal)
+
+        #prediction portion
+
+        return
+
+
     def benchmark(self, start, end, message = False): #used to determine performance of algorithm
         if message and self.debug:
             print(message + '\nTime Elapsed: '+ " %.9f seconds" % (end-start) + '\n')
