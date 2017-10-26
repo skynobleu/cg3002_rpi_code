@@ -37,7 +37,9 @@ class Software:
         # consider looping once using default CSV library into numpy array
         
         start = perf_counter()
-        self.rawData = np.genfromtxt(csvName, delimiter=',', usecols= range(0,7), dtype="Int64")
+        self.rawData = np.genfromtxt(csvName, delimiter=',', usecols= range(0,7), dtype="Int32")
+        print(self.rawData[:10])
+
 
         print("*** CHECK FOR INVALID VALUES READ FROM CSV ***")
         print(self.rawData.shape)
@@ -238,6 +240,7 @@ class Software:
                    if data[x][6] == data[x + frame_size -1][6] and overlap and x + frame_size < N:
 
                        # sample frame aka segment consists of only up to the 6th column
+
                        segment = np.vstack(data[x:x + frame_size, :6])
                        segments[j] = segment
 
@@ -284,6 +287,9 @@ class Software:
                print("Target Data:")
                print(target)
                print("Segmented Data:")
+               print("Single:")
+               print(segments[0])
+               print("Multiple")
                print(segments[-3:])
            
             
@@ -336,21 +342,21 @@ class Software:
             b_sequence = data[i][:, 4]
             c_sequence = data[i][:, 5]
 
-            x_mean = np.mean(x_sequence, dtype='Int64')
-            y_mean = np.mean(y_sequence, dtype='Int64')
-            z_mean = np.mean(z_sequence, dtype='Int64')
+            x_mean = np.mean(x_sequence, dtype='Int32')
+            y_mean = np.mean(y_sequence, dtype='Int32')
+            z_mean = np.mean(z_sequence, dtype='Int32')
 
-            a_mean = np.mean(a_sequence, dtype='Int64')
-            b_mean = np.mean(b_sequence, dtype='Int64')
-            c_mean = np.mean(c_sequence, dtype='Int64')
+            a_mean = np.mean(a_sequence, dtype='Int32')
+            b_mean = np.mean(b_sequence, dtype='Int32')
+            c_mean = np.mean(c_sequence, dtype='Int32')
 
-            x_std = np.std(x_sequence, dtype='Int64')
-            y_std = np.std(y_sequence, dtype='Int64')
-            z_std = np.std(z_sequence, dtype='Int64')
+            x_std = np.std(x_sequence, dtype='Int32')
+            y_std = np.std(y_sequence, dtype='Int32')
+            z_std = np.std(z_sequence, dtype='Int32')
 
-            a_std = np.std(a_sequence, dtype='Int64')
-            b_std = np.std(b_sequence, dtype='Int64')
-            c_std = np.std(c_sequence, dtype='Int64')
+            a_std = np.std(a_sequence, dtype='Int32')
+            b_std = np.std(b_sequence, dtype='Int32')
+            c_std = np.std(c_sequence, dtype='Int32')
 
             # obtain only the cov(X, Y) or corr(X, Y) value by the 0th row, 1st column of cov / cor matrix
             xy_cov = np.cov(x_sequence, y_sequence, ddof=0)[0, 1]
@@ -410,21 +416,21 @@ class Software:
             b_sequence = data[i][:, 4]
             c_sequence = data[i][:, 5]
 
-            x_mean = np.mean(x_sequence, dtype='Int64')
-            y_mean = np.mean(y_sequence, dtype='Int64')
-            z_mean = np.mean(z_sequence, dtype='Int64')
+            x_mean = np.mean(x_sequence, dtype='Int32')
+            y_mean = np.mean(y_sequence, dtype='Int32')
+            z_mean = np.mean(z_sequence, dtype='Int32')
 
-            a_mean = np.mean(a_sequence, dtype='Int64')
-            b_mean = np.mean(b_sequence, dtype='Int64')
-            c_mean = np.mean(c_sequence, dtype='Int64')
+            a_mean = np.mean(a_sequence, dtype='Int32')
+            b_mean = np.mean(b_sequence, dtype='Int32')
+            c_mean = np.mean(c_sequence, dtype='Int32')
 
-            x_std = np.std(x_sequence, dtype='Int64')
-            y_std = np.std(y_sequence, dtype='Int64')
-            z_std = np.std(z_sequence, dtype='Int64')
+            x_std = np.std(x_sequence, dtype='Int32')
+            y_std = np.std(y_sequence, dtype='Int32')
+            z_std = np.std(z_sequence, dtype='Int32')
 
-            a_std = np.std(a_sequence, dtype='Int64')
-            b_std = np.std(b_sequence, dtype='Int64')
-            c_std = np.std(c_sequence, dtype='Int64')
+            a_std = np.std(a_sequence, dtype='Int32')
+            b_std = np.std(b_sequence, dtype='Int32')
+            c_std = np.std(c_sequence, dtype='Int32')
 
             # obtain only the cov(X, Y) or corr(X, Y) value by the 0th row, 1st column of cov / cor matrix
             xy_cov = np.cov(x_sequence, y_sequence, ddof=0)[0, 1]
