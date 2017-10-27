@@ -5,13 +5,13 @@ from bin.prediction import Software
 import time
 classifier = Software(100)
 s = comm(serial.Serial("/dev/ttyS0",115200))
-c = client()
+c = client("192.168.43.146", 8888)
 s.handshake()
 
 while True:
     dataList = s.receive()
     preData = dataList[4]
-    #predicting fucntion here
+    #predicting function here
     actnum = classifier.predictDanceMove(preData)
     current = dataList[0]
     voltage = dataList[1]
