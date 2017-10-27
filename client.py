@@ -8,11 +8,11 @@ from Crypto import Random
 
 class client:
 
-	def __init__(self):
+	def __init__(self, host, port):
 
 		# get local machine name
-		self.host = "192.168.43.146"
-		self.port = 8888
+		self.host = host
+		self.port = port
 		
 	def clientsend(self,actnum,voltage,current,power,cumpower):
 		
