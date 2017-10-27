@@ -4,6 +4,7 @@ import csv
 class comm:
 	readyToReceive = 0
 	flag = 0
+	cumpower = 0
 	def __init__(self,ser):
 		self.ser = ser
 		
@@ -21,7 +22,7 @@ class comm:
 								if rec == 3:
 										self.readyToReceive = 1
 										self.flag = 1
-										open('test.csv', 'w')
+										#open('test.csv', 'w')
 					
 					
 
@@ -30,6 +31,7 @@ class comm:
 		count = 0
 		checksum = 0
 		error = 0
+		list2 = []
 		while self.readyToReceive == 1:
 				try:
 						read_serial = self.ser.readline()
@@ -51,14 +53,18 @@ class comm:
 						current = result.split('|')[7]
 						voltage = result.split('|')[8]
 						checkbit = result.split('|')[9]
+						inspower = int(current)*int(voltage)
+						cumpower = self.cumpower + inspower
 						#print(ord(checkbit))
+						if ord(checkbit) == '\n':
+								checkbit == chr('#')
 						if checksum == ord(checkbit):
-								list1 = [[x1,y1,z1,x2,y2,z2]]
+								list1 = [int(x1),int(y1),int(z1),int(x2),int(y2),int(z2)]
 								#print(list1)
-								with open('test.csv', 'a') as f:
-										writer = csv.writer(f)
-										writer.writerows(list1)
-										count = count + 1
+								#with open('test.csv', 'a') as f:
+										#writer = csv.writer(f)
+										#writer.writerows(list1)
+										#count = count + 1
 								#print(x1)
 								#print(y1)
 								#print(z1)
@@ -68,10 +74,18 @@ class comm:
 								#print(current)
 								#print(voltage)
 								#print(checkbit)
+								list2.append(list1)
+								count = count + 1
 								
 								if count == 100:
-									return error
+									list3 = []
+									list3.append(current)
+									list3.append(voltage)
+									list3.append(inspower)
+									list3.append(cumpower)
+									list3.append(list2)
+									return list3
 				except:
-						print("Error occurred")
+						#print("Error occurred")
 						error = error + 1
 					
