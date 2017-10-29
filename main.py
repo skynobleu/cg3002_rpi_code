@@ -3,7 +3,8 @@ from client import client
 import serial
 from bin.prediction import Software
 import time
-classifier = Software(100)
+classifier = Software("bin/models/KNN.sav")
+
 s = comm(serial.Serial("/dev/ttyS0",115200))
 c = client("192.168.43.146", 8888)
 s.handshake()
