@@ -10,10 +10,11 @@ class client:
 
 	def __init__(self, host, port):
 
+		self.s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 		# get local machine name
-                self.host = host
+		self.host = host
 		self.port = port
-		s.connect((self.host, self.port))
+		self.s.connect((self.host, self.port))
 
 	def clientsend(self,actnum,voltage,current,power,cumpower):
 		
@@ -38,7 +39,7 @@ class client:
 		#print(msg)
 
 		# Receive no more than 1024 bytes
-		s.send(encoded)                                    
+		self.s.send(encoded)
 
 		#s.close()
 
