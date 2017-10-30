@@ -65,7 +65,7 @@ class comm:
                         if ord(checkbit) == '\n':
                                 checkbit == chr('#')
                         if checksum == ord(checkbit):
-                                list1 = [int(xa1),int(ya1),int(za1),int(xg1),int(yg1),int(zg1),int(xa2),int(ya2),int(za2),int(xg2),int(yg2),int(zg2)]
+                                list1 = [[int(xa1),int(ya1),int(za1),int(xg1),int(yg1),int(zg1),int(xa2),int(ya2),int(za2),int(xg2),int(yg2),int(zg2)]]
                                 #print(list1)
                                 with open('test.csv', 'a') as f:
                                         writer = csv.writer(f)
