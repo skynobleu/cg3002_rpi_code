@@ -16,8 +16,8 @@ while True:
     #predicting function here
     actnum = classifier.predictDanceMove(preData)
 
-    print(actnum)
-    print("previous: "+ str(previous) )
+    #print(actnum)
+    #print("previous: "+ str(previous) )
     if actnum != "Standing":
         current = dataList[0]
         voltage = dataList[1]
@@ -25,7 +25,7 @@ while True:
         cumpower = "{:.3f}".format(dataList[3])
         if previous != "started":
             if previous == actnum:
-                print("send: " + actnum)
+                #print("send: " + actnum)
                 c.clientsend(actnum,voltage,current,inspower,cumpower)
                 previous = "resetted"
                 reset = True

@@ -22,7 +22,7 @@ class comm:
 								if rec == 3:
 										self.readyToReceive = 1
 										self.flag = 1
-										#open('test.csv', 'w')
+										open('test.csv', 'w')
 					
 					
 
@@ -53,7 +53,7 @@ class comm:
 						xa2 = result.split('|')[7]
 						ya2 = result.split('|')[8]
 						za2 = result.split('|')[9]
-						xg1 = result.split('|')[10]
+						xg2 = result.split('|')[10]
 						yg2 = result.split('|')[11]
 						zg2 = result.split('|')[12]
 						current = result.split('|')[13]
@@ -67,9 +67,9 @@ class comm:
 						if checksum == ord(checkbit):
 								list1 = [int(xa1),int(ya1),int(za1),int(xg1),int(yg1),int(zg1),int(xa2),int(ya2),int(za2),int(xg2),int(yg2),int(zg2)]
 								#print(list1)
-								#with open('test.csv', 'a') as f:
-										#writer = csv.writer(f)
-										#writer.writerows(list1)
+								with open('test.csv', 'a') as f:
+										writer = csv.writer(f)
+										writer.writerows(list1)
 										#count = count + 1
 								#print(x1)
 								#print(y1)
@@ -84,6 +84,8 @@ class comm:
 								count = count + 1
 								
 								if count == 150:
+                                                                        error = error + 1
+                                                                        print(error)
 									list3 = []
 									list3.append(current)
 									list3.append(voltage)
