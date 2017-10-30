@@ -77,7 +77,7 @@ class comm:
 								list2.append(list1)
 								count = count + 1
 								
-								if count == 200:
+								if count == 150:
 									list3 = []
 									list3.append(current)
 									list3.append(voltage)

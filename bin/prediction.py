@@ -205,7 +205,7 @@ class Software:
     def predictDanceMove(self, signal):
         try:
             rawSignal = np.asarray(signal)
-            processedSignal = self.extractFeaturesPredict(rawSignal)
+            processedSignal = self.extractFeaturesPredictNew(rawSignal)
             prediction_result = self.classifier.predict(processedSignal)
 
             return Software.labels[prediction_result[0]]
