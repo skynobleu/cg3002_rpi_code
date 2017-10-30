@@ -33,7 +33,7 @@ class comm:
 		error = 0
 		list2 = []
 		while self.readyToReceive == 1:
-				try:
+				#try:
 						read_serial = self.ser.readline()
 						result = '|'
 						result = result + str(read_serial,"utf-8")
@@ -53,7 +53,7 @@ class comm:
 						current = result.split('|')[7]
 						voltage = result.split('|')[8]
 						checkbit = result.split('|')[9]
-						inspower = int(current)*int(voltage)
+						inspower = float(current)*float(voltage)
 						cumpower = self.cumpower + inspower
 						#print(ord(checkbit))
 						if ord(checkbit) == '\n':
@@ -77,7 +77,7 @@ class comm:
 								list2.append(list1)
 								count = count + 1
 								
-								if count == 100:
+								if count == 200:
 									list3 = []
 									list3.append(current)
 									list3.append(voltage)
@@ -85,7 +85,7 @@ class comm:
 									list3.append(cumpower)
 									list3.append(list2)
 									return list3
-				except:
+				#except:
 						#print("Error occurred")
-						error = error + 1
+						#error = error + 1
 					

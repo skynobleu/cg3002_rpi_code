@@ -11,12 +11,13 @@ class client:
 	def __init__(self, host, port):
 
 		# get local machine name
-		self.host = host
+                self.host = host
 		self.port = port
-		
+		s.connect((self.host, self.port))
+
 	def clientsend(self,actnum,voltage,current,power,cumpower):
 		
-		s = socket.socket(socket.AF_INET, socket.SOCK_STREAM) 
+		#s = socket.socket(socket.AF_INET, socket.SOCK_STREAM) 
 		
 		actions = ['busdriver', 'frontback', 'jumping', 'jumpingjack', 'sidestep',
 				   'squatturnclap', 'turnclap', 'wavehands', 'windowcleaner360',
@@ -25,7 +26,7 @@ class client:
 
 
 		# connection to hostname on the port.
-		s.connect((self.host, self.port))
+		#s.connect((self.host, self.port))
 
 		msg = '#' + actnum + '|' + voltage + '|' + current + '|' + power + '|' + cumpower
 		length = 16 - (len(msg) % 16)
@@ -39,6 +40,6 @@ class client:
 		# Receive no more than 1024 bytes
 		s.send(encoded)                                    
 
-		s.close()
+		#s.close()
 
 		#print("The time got from the server is %s" % tm.decode('ascii'))
