@@ -44,22 +44,28 @@ class comm:
 								checksum ^= ord(i)
 						#print(checksum)
 						
-						x1 = result.split('|')[1]
-						y1 = result.split('|')[2]
-						z1 = result.split('|')[3]
-						x2 = result.split('|')[4]
-						y2 = result.split('|')[5]
-						z2 = result.split('|')[6]
-						current = result.split('|')[7]
-						voltage = result.split('|')[8]
-						checkbit = result.split('|')[9]
+						xa1 = result.split('|')[1]
+						ya1 = result.split('|')[2]
+						za1 = result.split('|')[3]
+						xg1 = result.split('|')[4]
+						yg1 = result.split('|')[5]
+						zg1 = result.split("|")[6]
+						xa2 = result.split('|')[7]
+						ya2 = result.split('|')[8]
+						za2 = result.split('|')[9]
+						xg1 = result.split('|')[10]
+						yg2 = result.split('|')[11]
+						zg2 = result.split('|')[12]
+						current = result.split('|')[13]
+						voltage = result.split('|')[14]
+						checkbit = result.split('|')[15]
 						inspower = float(current)*float(voltage)
 						cumpower = self.cumpower + inspower
 						#print(ord(checkbit))
 						if ord(checkbit) == '\n':
 								checkbit == chr('#')
 						if checksum == ord(checkbit):
-								list1 = [int(x1),int(y1),int(z1),int(x2),int(y2),int(z2)]
+								list1 = [int(xa1),int(ya1),int(za1),int(xg1),int(yg1),int(zg1),int(xa2),int(ya2),int(za2),int(xg2),int(yg2),int(zg2)]
 								#print(list1)
 								#with open('test.csv', 'a') as f:
 										#writer = csv.writer(f)
