@@ -22,7 +22,7 @@ class comm:
                                 if rec == 3:
                                         self.readyToReceive = 1
                                         self.flag = 1
-                                        open('test.csv', 'w')
+                                        #open('test.csv', 'w')
 
 
 
@@ -33,7 +33,7 @@ class comm:
         error = 0
         list2 = []
         while self.readyToReceive == 1:
-                #try:
+                try:
                         read_serial = self.ser.readline()
                         result = '|'
                         result = result + str(read_serial,"utf-8")
@@ -65,11 +65,11 @@ class comm:
                         if ord(checkbit) == '\n':
                                 checkbit == chr('#')
                         if checksum == ord(checkbit):
-                                list1 = [[int(xa1),int(ya1),int(za1),int(xg1),int(yg1),int(zg1),int(xa2),int(ya2),int(za2),int(xg2),int(yg2),int(zg2)]]
+                                list1 = [int(xa1),int(ya1),int(za1),int(xg1),int(yg1),int(zg1),int(xa2),int(ya2),int(za2),int(xg2),int(yg2),int(zg2)]
                                 #print(list1)
-                                with open('test.csv', 'a') as f:
-                                        writer = csv.writer(f)
-                                        writer.writerows(list1)
+                                #with open('test.csv', 'a') as f:
+                                        #writer = csv.writer(f)
+                                        #writer.writerows(list1)
                                         #count = count + 1
                                 #print(x1)
                                 #print(y1)
@@ -85,7 +85,7 @@ class comm:
 
                                 if count == 150:
                                     error = error + 1
-                                    print(error)
+                                    #print(error)
                                     list3 = []
                                     list3.append(current)
                                     list3.append(voltage)
@@ -93,7 +93,7 @@ class comm:
                                     list3.append(cumpower)
                                     list3.append(list2)
                                     return list3
-                #except:
-                        #print("Error occurred")
+                except:
+                        print("Error occurred")
                         #error = error + 1
 

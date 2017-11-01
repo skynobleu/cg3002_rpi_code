@@ -691,7 +691,7 @@ class Software:
         X_train, X_test, y_train, y_test = train_test_split(X, y, random_state=1)
 
         #train classifier
-        self.classifier = KNeighborsClassifier(n_neighbors=4)
+        self.classifier = KNeighborsClassifier(n_neighbors=1)
         self.classifier.fit(X_train, y_train)
 
         print("####### Persistence test: ########")

@@ -356,14 +356,14 @@ class Software:
         return featureData
 
     def predictDanceMove(self, signal):
-        try:
+        
             rawSignal = np.asarray(signal)
             processedSignal = self.extractFeaturesPredict12(rawSignal)
             prediction_result = self.classifier.predict(processedSignal)
 
             return Software.labels[prediction_result[0]]
-        except:
-            return "Error"
+        #except:
+            #return "Error"
 
 
        
