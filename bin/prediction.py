@@ -20,7 +20,7 @@ class Software:
     
     #class variables
     fileID = 0
-    labels = {0: "Standing",1: "Wave Hands", 2: "Bus Driver", 3: "Front Back", 4: "Sidestep", 5: "Jumping" }
+    labels = {0: "standing",1: "wavehands", 2: "busdriver", 3: "frontback", 4: "sidestep", 5: "jumping" }
     
     def __init__(self, modelDirectory):
        
