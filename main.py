@@ -6,7 +6,7 @@ import time
 classifier = Software("bin/models/KNN.sav")
 
 s = comm(serial.Serial("/dev/ttyS0",115200))
-c = client("192.168.1.20", 8888)
+c = client("192.168.1.233", 8888)
 s.handshake()
 previous = "started"
 reset = False
@@ -16,8 +16,8 @@ while True:
     #predicting function here
     actnum = classifier.predictDanceMove(preData)
 
-    #print(actnum)
-    #print("previous: "+ str(previous) )
+    print(actnum)
+    print("previous: "+ str(previous) )
     if actnum != "Standing":
         current = dataList[0]
         voltage = dataList[1]
@@ -25,7 +25,7 @@ while True:
         cumpower = "{:.3f}".format(dataList[3])
         if previous != "started":
             if previous == actnum:
-                #print("send: " + actnum)
+                print("send: " + actnum)
                 c.clientsend(actnum,voltage,current,inspower,cumpower)
                 previous = "resetted"
                 reset = True
