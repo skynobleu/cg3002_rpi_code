@@ -3,10 +3,10 @@ from client import client
 import serial
 from bin.prediction import Software
 import time
-classifier = Software("bin/models/KNN.sav")
+classifier = Software("bin/models/KNN_new.sav")
 
 s = comm(serial.Serial("/dev/ttyS0",115200))
-c = client("192.168.1.233", 8888)
+#c = client("192.168.1.233", 8888)
 s.handshake()
 previous = "started"
 reset = False
@@ -26,7 +26,7 @@ while True:
         if previous != "started":
             if previous == actnum:
                 print("send: " + actnum)
-                c.clientsend(actnum,voltage,current,inspower,cumpower)
+                #c.clientsend(actnum,voltage,current,inspower,cumpower)
                 previous = "resetted"
                 reset = True
         #else:
