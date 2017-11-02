@@ -59,8 +59,7 @@ class comm:
                         current = result.split('|')[13]
                         voltage = result.split('|')[14]
                         checkbit = result.split('|')[15]
-                        inspower = float(current)*float(voltage)
-                        cumpower = self.cumpower + inspower
+                        inspower = (float(current)*float(voltage))/1000
                         #print(ord(checkbit))
                         if ord(checkbit) == '\n':
                                 checkbit == chr('#')
@@ -90,7 +89,6 @@ class comm:
                                     list3.append(current)
                                     list3.append(voltage)
                                     list3.append(inspower)
-                                    list3.append(cumpower)
                                     list3.append(list2)
                                     return list3
                 except:
