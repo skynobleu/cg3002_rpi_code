@@ -697,7 +697,7 @@ class Software:
         print("####### Persistence test: ########")
         print("Original Accuracy:")
         print(self.classifier.score(X_test, y_test))
-        filename = 'models/KNN.sav'
+        filename = 'models/KNN_new.sav'
         joblib.dump(self.classifier, filename)
         #self.classifier= joblib.load(filename)
         loaded_model = joblib.load(filename)

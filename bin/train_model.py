@@ -4,7 +4,7 @@ from training_gyro import Software
 s = Software(150, True, 'log/results_new.txt')
 
 #s.inputModule('train/1wavehands1.csv')
-s.inputModule('gyro/merged/merged.csv')
+s.inputModule('new/merged/merged.csv')
 
 # while True:
 #     result = serial.run()
