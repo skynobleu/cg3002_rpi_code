@@ -2,72 +2,17 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="05450bc9-a0da-42f5-b05d-053eb78d1565" name="Default" comment="">
-      <change type="DELETED" beforePath="$PROJECT_DIR$/bin/new/adnrew_5jumping.csv" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/bin/new/andrew_0standing.csv" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/bin/new/andrew_1wavehands.csv" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/bin/new/andrew_2busdriver.csv" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/bin/new/andrew_4sidestep.csv" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/bin/new/eric_0standing.csv" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/bin/new/eric_1wavehand.csv" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/bin/new/eric_2busdriver.csv" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/bin/new/eric_3frontback.csv" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/bin/new/eric_4sidestep.csv" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/bin/new/eric_5jumping.csv" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/bin/new/ken_0standing.csv" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/bin/new/ken_1wavehands.csv" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/bin/new/ken_2busdriver.csv" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/bin/new/ken_3frontback.csv" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/bin/new/ken_4sidestep.csv" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/bin/new/ken_5jumping.csv" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/bin/new/merge_csv_script.py" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/bin/new/merged/merged.csv" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/bin/train/andrew_0standing.csv" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/bin/train/andrew_1wavehands.csv" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/bin/train/andrew_2busdriver.csv" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/bin/train/andrew_3frontback.csv" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/bin/train/andrew_4sidestep.csv" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/bin/train/andrew_5jumping.csv" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/bin/train/eric_0standing.csv" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/bin/train/eric_1wavehands.csv" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/bin/train/eric_2busdriver.csv" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/bin/train/eric_3frontback.csv" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/bin/train/eric_4sidestep.csv" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/bin/train/eric_5jumping.csv" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/bin/train/merge_csv_script.py" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/bin/train/merged.csv" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/bin/train/old_data/10windowcleaner3601.csv" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/bin/train/old_data/1wavehands1.csv" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/bin/train/old_data/2busdriver1.csv" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/bin/train/old_data/3frontback1.csv" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/bin/train/old_data/4sidestep1.csv" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/bin/train/old_data/5jumping1.csv" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/bin/train/old_data/6jumpingjack1.csv" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/bin/train/old_data/7turnclap1.csv" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/bin/train/old_data/8squatturnclap1.csv" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/bin/train/old_data/9windowcleaning1.csv" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/bin/train/old_data/merged.csv" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/bin/train/qy_0standing.csv" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/bin/train/qy_1wavehands.csv" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/bin/train/qy_2busdriver.csv" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/bin/train/qy_3frontback.csv" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/bin/train/qy_4sidestep.csv" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/bin/train/qy_5jumping.csv" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/bin/train/trash/dataset 1.csv" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/bin/train/wj_0standing.csv" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/bin/train/wj_1wavehands.csv" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/bin/train/wj_2busdriver.csv" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/bin/train/wj_3frontback.csv" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/bin/train/wj_4sidestep.csv" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/bin/train/wj_5jumping.csv" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/bin/train/ys_0standing.csv" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/bin/train/ys_1wavehands.csv" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/bin/train/ys_2busdriver.csv" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/bin/train/ys_3frontback.csv" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/bin/train/ys_4sidestep.csv" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/bin/train/ys_5jumping.csv" afterPath="" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/bin/models/KNN_new.sav" afterPath="$PROJECT_DIR$/bin/models/KNN_new.sav" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/bin/models/KNN_new.sav_01.npy" afterPath="$PROJECT_DIR$/bin/models/KNN_new.sav_01.npy" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/bin/models/KNN_new.sav_02.npy" afterPath="$PROJECT_DIR$/bin/models/KNN_new.sav_02.npy" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/bin/models/KNN_new.sav_03.npy" afterPath="$PROJECT_DIR$/bin/models/KNN_new.sav_03.npy" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/bin/models/KNN_new.sav_04.npy" afterPath="$PROJECT_DIR$/bin/models/KNN_new.sav_04.npy" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/bin/models/KNN_new.sav_05.npy" afterPath="$PROJECT_DIR$/bin/models/KNN_new.sav_05.npy" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/bin/models/KNN_new.sav_06.npy" afterPath="$PROJECT_DIR$/bin/models/KNN_new.sav_06.npy" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/bin/models/KNN_new.sav_07.npy" afterPath="$PROJECT_DIR$/bin/models/KNN_new.sav_07.npy" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/bin/prediction.py" afterPath="$PROJECT_DIR$/bin/prediction.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/bin/train_model.py" afterPath="$PROJECT_DIR$/bin/train_model.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/bin/training_gyro.py" afterPath="$PROJECT_DIR$/bin/training_gyro.py" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -137,8 +82,8 @@
       <file leaf-file-name="prediction.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/bin/prediction.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="345">
-              <caret line="23" column="0" lean-forward="false" selection-start-line="23" selection-start-column="0" selection-end-line="23" selection-end-column="0" />
+            <state relative-caret-position="319">
+              <caret line="22" column="216" lean-forward="false" selection-start-line="22" selection-start-column="105" selection-end-line="22" selection-end-column="216" />
               <folding>
                 <element signature="e#0#17#0" expanded="true" />
               </folding>
@@ -146,11 +91,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="training_gyro.py" pinned="false" current-in-tab="false">
+      <file leaf-file-name="training_gyro.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/bin/training_gyro.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="9075">
-              <caret line="620" column="0" lean-forward="false" selection-start-line="620" selection-start-column="0" selection-end-line="620" selection-end-column="0" />
+            <state relative-caret-position="120">
+              <caret line="23" column="217" lean-forward="false" selection-start-line="23" selection-start-column="217" selection-end-line="23" selection-end-column="217" />
               <folding />
             </state>
           </provider>
@@ -172,18 +117,18 @@
       <file leaf-file-name="train_model.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/bin/train_model.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="90">
-              <caret line="6" column="29" lean-forward="false" selection-start-line="6" selection-start-column="29" selection-end-line="6" selection-end-column="29" />
+            <state relative-caret-position="180">
+              <caret line="12" column="0" lean-forward="true" selection-start-line="12" selection-start-column="0" selection-end-line="12" selection-end-column="0" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="merge_csv_script.py" pinned="false" current-in-tab="true">
+      <file leaf-file-name="merge_csv_script.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/bin/datasets/latest/merge_csv_script.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="315">
-              <caret line="21" column="61" lean-forward="true" selection-start-line="21" selection-start-column="61" selection-end-line="21" selection-end-column="61" />
+            <state relative-caret-position="330">
+              <caret line="22" column="0" lean-forward="false" selection-start-line="22" selection-start-column="0" selection-end-line="22" selection-end-column="0" />
               <folding>
                 <element signature="e#0#11#0" expanded="true" />
               </folding>
@@ -228,12 +173,12 @@
         <option value="$PROJECT_DIR$/bin/training.py" />
         <option value="$PROJECT_DIR$/bin/main.py" />
         <option value="$PROJECT_DIR$/client.py" />
-        <option value="$PROJECT_DIR$/bin/training_gyro.py" />
         <option value="$PROJECT_DIR$/Comm.py" />
         <option value="$PROJECT_DIR$/main.py" />
         <option value="$PROJECT_DIR$/bin/prediction.py" />
-        <option value="$PROJECT_DIR$/bin/train_model.py" />
         <option value="$PROJECT_DIR$/bin/datasets/latest/merge_csv_script.py" />
+        <option value="$PROJECT_DIR$/bin/train_model.py" />
+        <option value="$PROJECT_DIR$/bin/training_gyro.py" />
       </list>
     </option>
   </component>
@@ -571,6 +516,16 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/bin/datasets/latest/merge_csv_script.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="330">
+          <caret line="22" column="0" lean-forward="false" selection-start-line="22" selection-start-column="0" selection-end-line="22" selection-end-column="0" />
+          <folding>
+            <element signature="e#0#11#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/main.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="630">
@@ -582,10 +537,18 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/bin/train_model.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="180">
+          <caret line="12" column="0" lean-forward="true" selection-start-line="12" selection-start-column="0" selection-end-line="12" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/bin/prediction.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="345">
-          <caret line="23" column="0" lean-forward="false" selection-start-line="23" selection-start-column="0" selection-end-line="23" selection-end-column="0" />
+        <state relative-caret-position="319">
+          <caret line="22" column="216" lean-forward="false" selection-start-line="22" selection-start-column="105" selection-end-line="22" selection-end-column="216" />
           <folding>
             <element signature="e#0#17#0" expanded="true" />
           </folding>
@@ -594,27 +557,9 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/bin/training_gyro.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="9075">
-          <caret line="620" column="0" lean-forward="false" selection-start-line="620" selection-start-column="0" selection-end-line="620" selection-end-column="0" />
+        <state relative-caret-position="120">
+          <caret line="23" column="217" lean-forward="false" selection-start-line="23" selection-start-column="217" selection-end-line="23" selection-end-column="217" />
           <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/bin/train_model.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="90">
-          <caret line="6" column="29" lean-forward="false" selection-start-line="6" selection-start-column="29" selection-end-line="6" selection-end-column="29" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/bin/datasets/latest/merge_csv_script.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="315">
-          <caret line="21" column="61" lean-forward="true" selection-start-line="21" selection-start-column="61" selection-end-line="21" selection-end-column="61" />
-          <folding>
-            <element signature="e#0#11#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
