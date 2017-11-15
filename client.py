@@ -32,7 +32,7 @@ class client:
 		msg = '#' + actnum + '|' + voltage + '|' + current + '|' + power + '|' + cumpower
 		length = 16 - (len(msg) % 16)
 		msg += length * ' '
-		secret_key = '1234567890abcdef'
+		secret_key = 'freertos_tonight'
 		iv = Random.new().read(AES.block_size)
 		cipher = AES.new(secret_key,AES.MODE_CBC,iv)
 		encoded = base64.b64encode(iv + cipher.encrypt(msg))
