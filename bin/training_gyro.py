@@ -21,7 +21,7 @@ class Software:
     
     #class variables
     fileID = 0
-    labels = {0: "standing",1: "wavehands", 2: "busdriver", 3: "frontback", 4: "sidestep", 5: "jumping" }
+    labels = {0: "standing",1: "wavehands", 2: "busdriver", 3: "frontback", 4: "sidestep", 5: "jumping",6: "jumpingjack", 7: "turnclap", 8: "squatturnclap", 9: "windowcleaner", 10: "windowcleaner360", 11: "punching" }
     columns = 12
 
     def __init__(self, sampleSize, debug = False, outputfile = False):
