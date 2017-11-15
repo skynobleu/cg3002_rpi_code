@@ -23,7 +23,7 @@ while True:
     print(actnum)
     print("previous: "+ str(previous) )
     if actnum != "Standing":
-        current = dataList[0]
+        current = float(dataList[0]) / 1000.0
         voltage = dataList[1]
         inspower = "{:.3f}".format(dataList[2])
         cumpower += float("{:.3f}".format(float(currTime - prevTime) * float(inspower)))
